@@ -29,15 +29,13 @@
 
 <body>
     <div class="container">
-
-    <h1>Welcome to the Application</h1>
-    <a href="{{ route('register') }}">
-        <button class="button">Sign Up</button>
-    </a>
-    <a href="{{ route('login') }}">
-        <button class="button">Login</button>
-    </a>
-
+    <h1>Welcome to Home</h1>
+    
+    <!-- Logout Form -->
+    <form method="POST" action="{{ route('logout') }}">
+        @csrf
+        <button type="submit" class="button">Logout</button>
+    </form>
     </div>
 </body>
 </html>
