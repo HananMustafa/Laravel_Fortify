@@ -15,23 +15,17 @@ use Laravel\Fortify\Fortify;
 
 class FortifyServiceProvider extends ServiceProvider
 {
-    /**
-     * Register any application services.
-     */
     public function register(): void
     {
         //
     }
-
-    /**
-     * Bootstrap any application services.
-     */
     public function boot(): void
     {
+
         Fortify::registerView(function () {
             return view('auth.register');
         });
-        // Use the CreateNewUser action class to handle registration
+        //Use the CreateNewUser action class to handle registration
         Fortify::createUsersUsing(\App\Actions\Fortify\CreateNewUser::class);
 
         Fortify::loginView(function () {
@@ -41,8 +35,6 @@ class FortifyServiceProvider extends ServiceProvider
         Fortify::updateUserPasswordsUsing(UpdateUserPassword::class);
         Fortify::resetUserPasswordsUsing(ResetUserPassword::class);
 
-
-
         // Forgot Password View
         Fortify::requestPasswordResetLinkView(function () {
             return view('auth.forgot-password');
@@ -51,6 +43,11 @@ class FortifyServiceProvider extends ServiceProvider
         // Reset Password View
          Fortify::resetPasswordView(function ($request) {
         return view('auth.reset-password', ['request' => $request]);
+        });
+
+        // Verify Email
+        Fortify::verifyEmailView(function ($request) {
+            return view('auth.verify-email');
         });
         
 

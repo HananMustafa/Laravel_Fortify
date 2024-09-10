@@ -19,6 +19,6 @@ Route::get('/', function () {
 
 
 // Home Route (Requires user to be authenticated)
-Route::middleware(['auth'])->get('/home', function () {
+Route::middleware(['auth', 'verified'])->get('/home', function () {
     return view('home'); // this is your new home view
 })->name('home');

@@ -11,17 +11,6 @@
     <div class= "formbg">
     <h1>Login</h1>
 
-    <!-- Display any validation errors -->
-    {{-- @if ($errors->any())
-        <div>
-            <ul>
-                @foreach ($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                @endforeach
-            </ul>
-        </div>
-    @endif --}}
-
     <form method="POST" action="{{ route('login') }}">
         @csrf
         <div class="field">
@@ -46,15 +35,11 @@
         <span class="error"> {{$message}} </span>
         @enderror
 
-        {{-- @if ($errors->has('throttle'))
-        <span class="error">Too many login attempts. Please try again later.</span>
-        @endif --}}
-
         <div>
             <button type="submit" class="btn-submit">Login</button>
         </div>
     </form>
-
     </div>
+
 </body>
 </html>
