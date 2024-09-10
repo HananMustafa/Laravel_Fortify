@@ -22,19 +22,25 @@
             <label for="email">Email:</label>
             <input type="email" id="email" name="email" required>
         </div>
+        
         <div class="field">
             <label for="password">Password:</label>
             <input type="password" id="password" name="password" required>
         </div>
 
-        @error('password')
-            {{$message}}
-        @enderror
-
         <div class="field">
             <label for="password_confirmation">Confirm Password:</label>
             <input type="password" id="password_confirmation" name="password_confirmation" required>
         </div>
+
+        @error('password')
+        <span class="error"> {{$message}} </span>
+        @enderror
+
+        @error('email')
+        <span class="error"> {{$message}} </span>
+        @enderror
+
         <div>
             <button type="submit" class="btn-submit">Register</button>
         </div>

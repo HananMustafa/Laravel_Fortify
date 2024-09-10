@@ -26,7 +26,7 @@
         </div>
         
         @error('email')
-            <span class="text-red-600">{{ $message }}</span>
+            <span class="error">{{ $message }}</span>
         @enderror
 
         <button type="submit" class="btn-submit">Send Password Reset Link</button>

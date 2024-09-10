@@ -114,3 +114,7 @@ h2 {
 .btn-submit {
     margin-bottom: 24px;
 }
+
+.error {
+    color:red;
+}

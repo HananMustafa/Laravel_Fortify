@@ -12,7 +12,7 @@
     <h1>Login</h1>
 
     <!-- Display any validation errors -->
-    @if ($errors->any())
+    {{-- @if ($errors->any())
         <div>
             <ul>
                 @foreach ($errors->all() as $error)
@@ -20,7 +20,7 @@
                 @endforeach
             </ul>
         </div>
-    @endif
+    @endif --}}
 
     <form method="POST" action="{{ route('login') }}">
         @csrf
@@ -33,6 +33,22 @@
             <label for="password">Password:</label>
             <input type="password" id="password" name="password" required>
         </div>
+
+        <div class="field">
+            <a href="{{ route('password.request') }}">Forgot Password?</a>
+        </div>
+
+        @error('password')
+        <span class="error"> {{$message}} </span>
+        @enderror
+
+        @error('email')
+        <span class="error"> {{$message}} </span>
+        @enderror
+
+        {{-- @if ($errors->has('throttle'))
+        <span class="error">Too many login attempts. Please try again later.</span>
+        @endif --}}
 
         <div>
             <button type="submit" class="btn-submit">Login</button>
