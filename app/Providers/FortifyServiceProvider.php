@@ -22,47 +22,39 @@ class FortifyServiceProvider extends ServiceProvider
     public function boot(): void
     {
 
+        //REGISTERATION
         Fortify::registerView(function () {
             return view('auth.register');
         });
         //Use the CreateNewUser action class to handle registration
         Fortify::createUsersUsing(\App\Actions\Fortify\CreateNewUser::class);
 
+
+        //LOGIN AUTHENTICATION
         Fortify::loginView(function () {
             return view('auth.login');
         });
 
+
+        //FORGOT & RESET PASSWORD
         Fortify::updateUserPasswordsUsing(UpdateUserPassword::class);
         Fortify::resetUserPasswordsUsing(ResetUserPassword::class);
 
-        // Forgot Password View
+        //Forgot Password View
         Fortify::requestPasswordResetLinkView(function () {
             return view('auth.forgot-password');
         });
 
-        // Reset Password View
+        //Reset Password View
          Fortify::resetPasswordView(function ($request) {
         return view('auth.reset-password', ['request' => $request]);
         });
 
-        // Verify Email
+        
+        //EMAIL VERIFICATION
         Fortify::verifyEmailView(function ($request) {
             return view('auth.verify-email');
         });
         
-
-        // Fortify::createUsersUsing(CreateNewUser::class);
-        // Fortify::updateUserProfileInformationUsing(UpdateUserProfileInformation::class);
-
-
-        // RateLimiter::for('login', function (Request $request) {
-        //     $throttleKey = Str::transliterate(Str::lower($request->input(Fortify::username())).'|'.$request->ip());
-
-        //     return Limit::perMinute(5)->by($throttleKey);
-        // });
-
-        // RateLimiter::for('two-factor', function (Request $request) {
-        //     return Limit::perMinute(5)->by($request->session()->get('login.id'));
-        // });
     }
 }

@@ -31,7 +31,6 @@
     <div class="container">
     <h1>Welcome to Home</h1>
     
-    <!-- Logout Form -->
     <form method="POST" action="{{ route('logout') }}">
         @csrf
         <button type="submit" class="button">Logout</button>
