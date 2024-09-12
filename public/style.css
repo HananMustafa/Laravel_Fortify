@@ -118,3 +118,7 @@ h2 {
 .error {
     color:red;
 }
+
+.margin-top {
+    margin-top: 20px; /* Adjust the value as needed */
+}

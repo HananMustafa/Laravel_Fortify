@@ -8,57 +8,57 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <style>
+    * {
+        padding: 0;
+        margin: 0;
+        box-sizing: border-box;
+        font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica Neue, Ubuntu, sans-serif;
+        color: #1a1f36;
+    }
 
-* {
-    padding: 0;
-    margin: 0;
-    box-sizing: border-box;
-    font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica Neue, Ubuntu, sans-serif;
-    color: #1a1f36;
-}
+    body {
+        background-color: #ffffff;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+    }
 
-body {
-    background-color: #ffffff;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    margin: 0;
-}
+    h2 {
+        margin-bottom: 24px;
+        color: #1a1f36;
+        font-size: 24px;
+        text-align: center;
+    }
 
-h2 {
-    margin-bottom: 24px;
-    color: #1a1f36;
-    font-size: 24px;
-    text-align: center;
-}
+    .formbg {
+        width: 100%;
+        max-width: 448px;
+        padding: 48px;
+        background: #ffffff;
+        border-radius: 4px;
+        box-shadow: rgba(60, 66, 87, 0.12) 0px 7px 14px 0px, rgba(0, 0, 0, 0.12) 0px 3px 6px 0px;
+    }
 
-.formbg {
-    width: 100%;
-    max-width: 448px;
-    padding: 48px;
-    background: #ffffff;
-    border-radius: 4px;
-    box-shadow: rgba(60, 66, 87, 0.12) 0px 7px 14px 0px, rgba(0, 0, 0, 0.12) 0px 3px 6px 0px;
-}
+    .btn-submit {
+        width: 100%;
+        padding: 12px;
+        font-size: 16px;
+        font-weight: 600;
+        color: #ffffff;
+        background-color: #5469d4;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        text-align: center;
+    }
 
-.btn-submit {
-    width: 100%;
-    padding: 12px;
-    font-size: 16px;
-    font-weight: 600;
-    color: #ffffff;
-    background-color: #5469d4;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    text-align: center;
-}
-
-.btn-submit:hover {
-    background-color: #4357ad;
-}
+    .btn-submit:hover {
+        background-color: #4357ad;
+    }
 </style>
+
 <body>
 
     <div class= "formbg">
