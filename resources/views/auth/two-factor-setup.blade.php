@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Welcome</title>
+    <title>Two Factor</title>
     <style>
         * {
             padding: 0;
@@ -73,25 +73,55 @@
 
 <body>
     <div class="container">
-        <h1>Welcome to Home</h1>
+        <h1>Two Factor Setup</h1>
 
         <div class="formbg">
-           {{-- Add client button and clients list will be displayed here --}}
+            <form method="POST" action="{{ url('user/two-factor-authentication') }}">
+                @csrf
+
+                @if (!auth()->user()->two_factor_secret)
+                    <div>
+                        You have not enabled 2FA
+                    </div>
+
+                    <button type="submit" class="button">Enable </button>
+                @else
+                    <div>
+                        <h2>You have 2FA enabled</h2>
+                    </div>
+
+                    <div>
+                        Scan the following QR code into your phones authenticator application.
+                    </div>
+
+                    <div class="margin-top">
+                        {!! auth()->user()->twoFactorQrCodeSvg() !!}
+                    </div>
+
+                    <div class="dmargin-top">
+                        <h3> Recovery codes </h3>
+                        <div class="margin-top">
+                            <ul>
+                                @foreach (json_decode(decrypt(auth()->user()->two_factor_recovery_codes, true)) as $code)
+                                    <li> {{ $code }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    </div>
+
+                    @method('DELETE')
+                    <div class="margin-top">
+                        <button type="submit" class="button"> Disable </button>
+                    </div>
+                @endif
+            </form>
+
+
+
+
+            <a href="{{ route('home') }}" class="button">Home</a>
         </div>
 
-
-
-        <div class="dmargin-top">
-            <div class="formbg">
-
-                <a href="{{ route('two-factor-setup') }}" class="button">Two Factor Setup</a>
-                
-                <form method="POST" action="{{ route('logout') }}">
-                    @csrf
-                    <button type="submit" class="button">Logout</button>
-                </form>
-            </div>
-        </div>
 </body>
 
 </html>
