@@ -9,11 +9,6 @@ Route::get('/', function () {
 });
 
 
-// //Home Route (Requires user to be authenticated & verified)
-// Route::middleware(['auth', 'verified'])->get('/home', function () {
-//     return view('home');
-// })->name('home');
-
 // Two-Factor Setup Route (Requires user to be authenticated)
 Route::middleware(['auth', 'verified'])->get('/two-factor-setup', function () {
     return view('auth/two-factor-setup');
@@ -21,9 +16,7 @@ Route::middleware(['auth', 'verified'])->get('/two-factor-setup', function () {
 
 
 
-
-
-//Client CRUD Routes
+// Client CRUD Routes
 Route::middleware(['auth', 'verified'])->get('/home', [ClientController::class, 'index'])->name('home');
 
 Route::middleware(['auth', 'verified'])->group(function () {
