@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ClientController;
+use App\Http\Controllers\NoteController;
 
 
 Route::get('/', function () {
@@ -28,4 +29,15 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     // DataTables route to fetch client data
     Route::get('/clients/data', [ClientController::class, 'getData'])->name('clients.data');
+});
+
+
+
+// Notes Routes
+Route::middleware(['auth', 'verified'])->group(function () {
+    Route::get('/client/{clientId}/notes', [NoteController::class, 'index'])->name('notes.index');
+    Route::post('/client/{clientId}/notes', [NoteController::class, 'store'])->name('notes.store');
+    Route::get('/client/{clientId}/notes/{id}/edit', [NoteController::class, 'edit'])->name('notes.edit');
+    Route::put('/client/{clientId}/notes/{id}', [NoteController::class, 'update'])->name('notes.update');
+    Route::delete('/client/{clientId}/notes/{id}', [NoteController::class, 'destroy'])->name('notes.destroy');
 });
