@@ -40,7 +40,7 @@
         $(document).ready(function() {
             $('#clients-table').DataTable({
                 processing: true,
-                serverSide: true,
+                serverSide: true, //filtering or pagination on server side
                 ajax: '{{ route('clients.data') }}',
                 columns: [
                     { data: 'id', name: 'id' },
@@ -49,8 +49,8 @@
                     {
                         data: 'action',
                         name: 'action',
-                        orderable: false,
-                        searchable: false,
+                        orderable: false, //sorting
+                        searchable: false, //searching
                         render: function(data, type, row) {
                             return `
                                 <a href="/client/${row.id}/notes" class="btn btn-sm btn-secondary">Notes</a>
