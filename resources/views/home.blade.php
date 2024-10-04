@@ -9,7 +9,9 @@
         <div class="margin-top">
             <form method="POST" action="{{ route('logout') }}">
                 @csrf
+                <div class="btn-submit">
                 <button type="submit" class="button">Logout</button>
+                </div>
             </form>
         </div>
     </div>
@@ -39,7 +41,7 @@
     <script>
         $(document).ready(function() {
             $('#clients-table').DataTable({
-                processing: true,
+                //processing: true,
                 serverSide: true, //filtering or pagination on server side
                 ajax: '{{ route('clients.data') }}',
                 columns: [
