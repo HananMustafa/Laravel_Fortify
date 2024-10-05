@@ -9,43 +9,35 @@
 <body>
 
 
-    <div class= "formbg">
-    <h1>Register</h1>
-
+    
     <form method="POST" action="{{ route('register') }}">
         @csrf
-        <div class="field">
-            <label for="name">Name:</label>
-            <input type="text" id="name" name="name" required>
-        </div>
-        <div class="field">
-            <label for="email">Email:</label>
-            <input type="email" id="email" name="email" required>
-        </div>
-        
-        <div class="field">
-            <label for="password">Password:</label>
-            <input type="password" id="password" name="password" required>
-        </div>
+        <div class="container">
+            <div class="left">
+            <div class="header">
+                <h2 class="animation a1">Register</h2>
+                <h4 class="animation a2">Create a new account by giving following details</h4>
+            </div>
+            <div class="form">
 
-        <div class="field">
-            <label for="password_confirmation">Confirm Password:</label>
-            <input type="password" id="password_confirmation" name="password_confirmation" required>
-        </div>
+                <input type="text" id="name" name="name" required class="form-field animation a3" placeholder="Name">
 
-        @error('password')
-        <span class="error"> {{$message}} </span>
-        @enderror
-
-        @error('email')
-        <span class="error"> {{$message}} </span>
-        @enderror
-
-        <div>
-            <button type="submit" class="btn-submit">Register</button>
+                <input type="email" id="email" name="email" required class="form-field animation a3" placeholder="Email Address">
+                @error('email')
+                <span class="error"> {{$message}} </span>
+                @enderror
+    
+                <input type="password" id="password" name="password" required class="form-field animation a4" placeholder="Password">
+                <input type="password" id="password_confirmation" name="password_confirmation" required class="form-field animation a4" placeholder="Confirm Password">
+                @error('password')
+                <span class="error"> {{$message}} </span>
+                @enderror
+                
+                <button class="animation a6">Signup</button>
+            </div>
+            </div>
+            <div type="submit" class="right"></div>
         </div>
     </form>
-
-    </div>
 </body>
 </html>
