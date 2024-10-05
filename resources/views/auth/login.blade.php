@@ -34,13 +34,14 @@
               @error('password')
               <span class="error"> {{$message}} </span>
               @enderror
-              
+
               <p class="animation a5"><a href="{{ route('password.request') }}">Forgot Password?</a></p>
               <button class="animation a6">LOGIN</button>
             </div>
           </div>
           <div type="submit" class="right"></div>
         </div>
+    </form>
       
 
 </body>
