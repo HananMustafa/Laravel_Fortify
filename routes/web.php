@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\HomeController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ClientController;
 use App\Http\Controllers\NoteController;
@@ -18,7 +19,8 @@ Route::middleware(['auth', 'verified'])->get('/two-factor-setup', function () {
 
 
 // Client CRUD Routes
-Route::middleware(['auth', 'verified'])->get('/home', [ClientController::class, 'index'])->name('home');
+Route::middleware(['auth', 'verified'])->get('/client', [ClientController::class, 'index'])->name('client');
+Route::middleware(['auth', 'verified'])->get('/home', [HomeController::class, 'index'])->name('home');
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/client/add', [ClientController::class, 'create'])->name('client.add');
