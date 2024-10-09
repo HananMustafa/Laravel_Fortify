@@ -1,80 +1,243 @@
 @extends('layouts.app')
 
 @section('content')
+<style>
+    .top {
+        display:flex;
+        justify-content: space-between;
+        margin-bottom: 10px;
+    }
+    .left-search {
+        text-align: left;
+        margin-top: 15px;
+    }
+    .right-button {
+        text-align: right;
+    }
+    .bottom {
+        display:flex;
+        justify-content: space-between;
+        margin-top: 10px;
+    }
+    .bottom-left {
+        flex: 1;
+        text-align: left;
+        margin: 23px;
+    }
+    .bottom-center {
+        flex: 1;
+        text-align: center;
+        margin: 12px;
+    }
+    .bottom-right {
+        flex: 1;
+        text-align: right;
+    }
 
-    {{-- <div class="top-right">
-        <div class="margin-top">
-            <form method="POST" action="{{ route('logout') }}">
-                @csrf
-                <div class="btn-submit">
-                    <button type="submit" class="button">Logout</button>
-                </div>
-            </form>
-        </div>
-    </div> --}}
 
-    <div class="center-content">
-        <h1>Welcome to Home</h1>
+    /* Ensure DataTable buttons use your styles */
+    .dt-buttons .button {
+        width: 100% !important;
+        padding: 12px 10px !important;
+        border: 0 !important;
+        background: rgb(0, 177, 68) !important;
+        border-radius: 3px !important;
+        margin-top: 10px !important;
+        color: #fff !important;
+        letter-spacing: 1px !important;
+        font-family: 'Rubik', sans-serif !important;
+        cursor: pointer !important;
+    }
 
-        <div>
-            <a href="{{ route('client.add') }}" class="button">Add Client</a>
-        </div>
+    .dt-buttons .button:hover {
+        background-color: rgb(0, 102, 39) !important;
+    }
 
-        <div>
-            <table class="table table-bordered" id="clients-table">
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Name</th>
-                        <th>Email</th>
-                        <th>Action</th>
-                    </tr>
-                </thead>
-            </table>
-        </div>
+
+
+
+
+    /* Pagination button styles matching your project */
+.dataTables_paginate .paginate_button {
+    width: auto !important; /* Adjust for auto width */
+    padding: 12px 10px !important;
+    border: 0 !important;
+    background: rgb(0, 177, 68) !important;
+    border-radius: 3px !important;
+    margin-top: 10px !important;
+    color: #fff !important;
+    letter-spacing: 1px !important;
+    font-family: 'Rubik', sans-serif !important;
+    cursor: pointer !important;
+    text-align: center;
+}
+
+/* Hover effect for pagination buttons */
+.dataTables_paginate .paginate_button:hover {
+    background-color: rgb(0, 102, 39) !important;
+    color: #fff !important;
+}
+
+/* Active/current pagination button */
+.dataTables_paginate .paginate_button.current {
+    background-color: rgb(0, 102, 39) !important;
+    color: #fff !important;
+}
+
+/* Style the container for pagination alignment */
+.bottom-right .dataTables_paginate {
+    display: inline-block !important;
+    text-align: right !important;
+    float: right !important;
+}
+
+
+
+
+
+.d-flex.align-items-center {
+    justify-content: space-between;
+
+}
+
+
+
+/* Style for the button */
+.btn-secondary {
+    background-color: #cdd0d3; /* Bootstrap secondary color */
+    border: none; /* Remove default border */
+    color: white; /* Text color */
+}
+.btn-secondary:hover {
+    background-color: #a4a8ac; /* Bootstrap secondary color */
+    border: none; /* Remove default border */
+    color: white; /* Text color */
+}
+
+/* Icon styles */
+.d-flex.align-items-center img {
+    width: 20px; /* Icon width */
+    height: 20px; /* Icon height */
+    margin-right: 5px; /* Spacing between icon and text */
+}
+
+/* Dropdown menu */
+.dropdown-menu {
+    background-color: #ffffff; /* White background for dropdown */
+    border: 1px solid #ced4da; /* Border color for dropdown */
+    border-radius: 5px; /* Optional: round corners */
+}
+
+/* Dropdown item styles */
+.dropdown-item {
+    color: #333; /* Darker text color */
+}
+
+/* Change hover effect for dropdown items */
+.dropdown-item:hover {
+    background-color: #e9ecef; /* Light grey on hover */
+    color: #212529; /* Darker text on hover */
+}
+
+/* Ensure button and dropdown icon align properly */
+.dropdown-toggle img {
+    margin: 0; /* Reset margin for dropdown icon */
+}
+
+
+
+</style>
+
+<div class="center-content">
+    <h1>Welcome to Home</h1>
+
+    <div>
+        <table class="table table-bordered" id="clients-table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+        </table>
     </div>
+</div>
 
-    <script>
-        $(document).ready(function() {
-            $('#clients-table').DataTable({
-                serverSide: true,
-                ajax: '{{ route('clients.data') }}',
-                columns: [
-                    { data: 'id', name: 'id' },
-                    { data: 'name', name: 'name' },
-                    { data: 'email', name: 'email' },
-                    {
-                        data: 'action',
-                        name: 'action',
-                        orderable: false,
-                        searchable: false,
-                        render: function(data, type, row) {
-                            return `
-                                <a href="/client/${row.id}/notes" class="btn btn-sm btn-secondary">Notes</a>
-                                <a href="/client/edit/${row.id}" class="btn btn-sm btn-primary">Update</a>
-                                <button type="button" class="btn btn-sm btn-danger delete-client" data-id="${row.id}">Delete</button>
-                            `;
-                        }
+<script>
+    $(document).ready(function() {
+        $('#clients-table').DataTable({
+            serverSide: true,
+            ajax: '{{ route('clients.data') }}',
+            columns: [
+                { data: 'id', name: 'id' },
+                { data: 'name', name: 'name' },
+                { data: 'email', name: 'email' },
+                {
+                    data: 'action',
+                    name: 'action',
+                    orderable: false,
+                    searchable: false,
+                    render: function(data, type, row) {
+                        return `
+                        <div class="d-flex align-items-center">
+                           <a href="/client/${row.id}/notes" class="btn btn-secondary btn-sm me-2">
+                                <img src="{{ asset('images/note.svg') }}" alt="Notes" style="width: 20px; height: 20px;">
+                            </a>
+                            
+                            <div class="dropdown">
+                                <button class="btn btn-secondary btn-sm dropdown-toggle" type="button" id="dropdownMenuButton${row.id}" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <img src="{{ asset('images/menu.svg') }}" alt="Actions" style="width: 20px; height: 20px;">
+                                </button>
+                                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton${row.id}">
+                                    <li><a class="dropdown-item" href="/client/edit/${row.id}">Update</a></li>
+                                    <li><a class="dropdown-item delete-client" data-id="${row.id}" href="#">Delete</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                `;
                     }
-                ]
-            });
-
-            $(document).on('click', '.delete-client', function() {
-                var id = $(this).data('id');
-                if (confirm("Are you sure to delete this client?")) {
-                    $.ajax({
-                        url: '{{ url("/client/delete") }}/' + id,
-                        type: 'DELETE',
-                        data: {
-                            "_token": "{{ csrf_token() }}",
-                        },
-                        success: function(response) {
-                            $('#clients-table').DataTable().ajax.reload();
-                            alert(response.success);
-                        }
-                    });
                 }
-            });
+            ],
+            dom: '<"top"<"left-search"f><"right-button"B>>t<"bottom"<"bottom-left"l><"bottom-center"i><"bottom-right"p>>',
+            language: {
+                search: "Search: ",  // Customize the search box text
+                lengthMenu: "Show _MENU_ entries",  // Customize the length menu
+                info: "Showing _START_ to _END_ of _TOTAL_ entries",  // Customize the table information
+                paginate: {
+                    previous: "Previous",
+                    next: "Next"
+                }
+            },
+            buttons: [
+                {
+                    text: 'Add Client', // Replace "Custom Button" with "Add Client"
+                    className: 'button',
+                    action: function(e, dt, node, config) {
+                        window.location.href = '{{ route("client.add") }}'; // Redirect to the Add Client page
+                    }
+                }
+            ]
         });
-    </script>
+
+        // Delete client functionality
+        $(document).on('click', '.delete-client', function() {
+            var id = $(this).data('id');
+            if (confirm("Are you sure to delete this client?")) {
+                $.ajax({
+                    url: '{{ url("/client/delete") }}/' + id,
+                    type: 'DELETE',
+                    data: {
+                        "_token": "{{ csrf_token() }}",
+                    },
+                    success: function(response) {
+                        $('#clients-table').DataTable().ajax.reload();
+                        alert(response.success);
+                    }
+                });
+            }
+        });
+    });
+</script>
 @endsection
