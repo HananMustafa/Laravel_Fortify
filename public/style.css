@@ -161,10 +161,6 @@
 
 
 
-
-
-
-
 * { box-sizing: border-box; }
 @import url('https://fonts.googleapis.com/css?family=Rubik:400,500&display=swap');
 
@@ -230,6 +226,16 @@ body {
   display: flex;
   flex-direction: column;
   /* text-align: center; */
+}
+
+.Section-Form {
+  width: 40%;
+  max-width: 50%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin: 0 auto; /* Centers the entire form horizontally */
 }
 
 
