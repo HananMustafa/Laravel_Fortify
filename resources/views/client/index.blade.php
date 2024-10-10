@@ -176,8 +176,8 @@
     </div>
 </div>
 
-<!-- Modal for Updating Client -->
-@include('client.modal.update')
+<!-- Modal for Adding Client -->
+@include('client.modal.add') <!-- Include the add modal -->
 
 <script>
     $(document).ready(function() {
@@ -226,36 +226,35 @@
                     text: 'Add Client',
                     className: 'button',
                     action: function() {
-                        window.location.href = '{{ route("client.add") }}';
+                        $('#addClientModal').modal('show'); // Show the modal
                     }
                 }
             ],
             pagingType: 'numbers',
         });
-    
-    // Show Update Modal with Client Data
-    $(document).on('click', '.update-client', function() {
-        var clientId = $(this).data('id');
 
-        // Make an AJAX call to fetch client data
-        $.ajax({
-            url: `/client/edit/${clientId}`,
-            method: 'GET',
-            success: function(response) {
-                // Populate modal fields with client data
-                $('#updateModal').find('input[name="name"]').val(response.client.name);
-                $('#updateModal').find('input[name="email"]').val(response.client.email);
-                $('#updateModal').find('form').attr('action', `/client/update/${clientId}`);
+        // Show Update Modal with Client Data
+        $(document).on('click', '.update-client', function() {
+            var clientId = $(this).data('id');
 
-                // Show the modal
-                $('#updateModal').modal('show');
-            },
-            error: function() {
-                alert('Failed to fetch client data.');
-            }
+            // Make an AJAX call to fetch client data
+            $.ajax({
+                url: `/client/edit/${clientId}`,
+                method: 'GET',
+                success: function(response) {
+                    // Populate modal fields with client data
+                    $('#updateModal').find('input[name="name"]').val(response.client.name);
+                    $('#updateModal').find('input[name="email"]').val(response.client.email);
+                    $('#updateModal').find('form').attr('action', `/client/update/${clientId}`);
+
+                    // Show the modal
+                    $('#updateModal').modal('show');
+                },
+                error: function() {
+                    alert('Failed to fetch client data.');
+                }
+            });
         });
-    });
-    
 
         // Delete client functionality
         $(document).on('click', '.delete-client', function() {
@@ -273,6 +272,25 @@
                     }
                 });
             }
+        });
+
+        // Handle form submission for adding a client
+        $('#addClientForm').on('submit', function(e) {
+            e.preventDefault(); // Prevent default form submission
+
+            $.ajax({
+                url: '{{ route("client.store") }}',
+                type: 'POST',
+                data: $(this).serialize(),
+                success: function(response) {
+                    $('#addClientModal').modal('hide'); // Hide the modal
+                    $('#clients-table').DataTable().ajax.reload(); // Reload the DataTable
+                    alert('Client added successfully.');
+                },
+                error: function(xhr) {
+                    alert('Error adding client: ' + xhr.responseJSON.message);
+                }
+            });
         });
     });
 </script>

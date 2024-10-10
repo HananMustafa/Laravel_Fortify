@@ -42,17 +42,31 @@ class NoteController extends Controller
     }
 
     // Update a note
-    public function update(Request $request, $clientId, $id)
-    {
-        $request->validate([
-            'content' => 'required',
-        ]);
+    // public function update(Request $request, $clientId, $id)
+    // {
+    //     $request->validate([
+    //         'content' => 'required',
+    //     ]);
 
-        $note = Note::where('client_id', $clientId)->findOrFail($id);
-        $note->update(['content' => $request['content'],]);
+    //     $note = Note::where('client_id', $clientId)->findOrFail($id);
+    //     $note->update(['content' => $request['content'],]);
 
-        return redirect()->route('notes.index', $clientId)->with('success', 'Note updated successfully.');
-    }
+    //     return redirect()->route('notes.index', $clientId)->with('success', 'Note updated successfully.');
+    // }
+
+    // Update a note
+public function update(Request $request, $clientId, $id)
+{
+    $request->validate([
+        'content' => 'required',
+    ]);
+
+    $note = Note::where('client_id', $clientId)->findOrFail($id);
+    $note->update(['content' => $request['content'],]);
+
+    return redirect()->route('notes.index', ['clientId' => $clientId])
+                     ->with('success', 'Note updated successfully.');
+}
 
     // Delete a note
     public function destroy($clientId, $id)
