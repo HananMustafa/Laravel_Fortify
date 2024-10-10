@@ -6,6 +6,8 @@ use App\Models\Client;
 use App\Models\Note;
 use Illuminate\Http\Request;
 
+use Yajra\DataTables\Facades\DataTables;
+
 class NoteController extends Controller
 {
     // Display notes for a client
@@ -60,4 +62,32 @@ class NoteController extends Controller
 
         return redirect()->route('notes.index', $clientId)->with('success', 'Note deleted successfully.');
     }
+
+
+
+
+
+
+    public function getNotesData($clientId)
+{
+    $notes = Note::where('client_id', $clientId)->select(['id', 'content', 'created_at']);
+    
+    return DataTables::of($notes)
+        ->addColumn('action', function ($note) {
+            return '
+                <div class="d-flex align-items-center">
+                    <div class="dropdown">
+                        <button class="btn btn-secondary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <img src="' . asset('images/menu.svg') . '" alt="Actions" style="width: 20px; height: 20px;">
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="#">Update</a></li>
+                            <li><a class="dropdown-item delete-note" data-id="' . $note->id . '" href="#">Delete</a></li>
+                        </ul>
+                    </div>
+                </div>';
+        })
+        ->rawColumns(['action'])
+        ->make(true);
+}
 }

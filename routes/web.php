@@ -42,4 +42,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/client/{clientId}/notes/{id}/edit', [NoteController::class, 'edit'])->name('notes.edit');
     Route::put('/client/{clientId}/notes/{id}', [NoteController::class, 'update'])->name('notes.update');
     Route::delete('/client/{clientId}/notes/{id}', [NoteController::class, 'destroy'])->name('notes.destroy');
+
+    Route::get('client/{id}/notes/data', [NoteController::class, 'getNotesData'])->name('notes.data');
 });
