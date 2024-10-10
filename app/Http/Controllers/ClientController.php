@@ -51,7 +51,7 @@ class ClientController extends Controller
         $client = Client::findOrFail($id);
         $client->update($request->only('name', 'email'));
 
-        return redirect()->route('home')->with('success', 'Client updated successfully.');
+        return redirect()->route('client')->with('success', 'Client updated successfully.');
     }
 
     public function destroy($id)
