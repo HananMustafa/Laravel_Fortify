@@ -22,17 +22,26 @@
     .bottom-left {
         flex: 1;
         text-align: left;
-        margin: 23px;
+        margin-top: 23px;
     }
     .bottom-center {
         flex: 1;
         text-align: center;
         margin: 12px;
     }
-    .bottom-right {
-        flex: 1;
-        text-align: right;
-    }
+    /* Style for bottom-right to stack the i and p elements */
+.bottom-right {
+    display: flex;
+    flex-direction: column; /* Stack i and p vertically */
+    align-items:flex-end;  /* Align to the right */
+    gap: 10px;              /* Add space between i and p */
+    margin-top: 13px;
+}
+
+.dataTables_info {
+    text-align: right;  /* Ensure the info text aligns to the right */
+    margin-bottom: 5px; /* Add margin to separate from pagination */
+}
 
 
     /* Ensure DataTable buttons use your styles */
@@ -61,11 +70,11 @@
 .dataTables_paginate .paginate_button {
     width: auto !important; /* Adjust for auto width */
     padding: 12px 10px !important;
-    border: 0 !important;
-    background: rgb(0, 177, 68) !important;
+    border: 2px solid rgb(0, 102, 39) !important;
+    background: rgb(255, 255, 255) !important;
     border-radius: 3px !important;
     margin-top: 10px !important;
-    color: #fff !important;
+    color: #000000 !important;
     letter-spacing: 1px !important;
     font-family: 'Rubik', sans-serif !important;
     cursor: pointer !important;
@@ -78,11 +87,13 @@
     color: #fff !important;
 }
 
-/* Active/current pagination button */
-.dataTables_paginate .paginate_button.current {
+
+.dataTables_wrapper .dataTables_paginate .paginate_button.current,
+.dataTables_wrapper .dataTables_paginate .paginate_button.current:hover {
     background-color: rgb(0, 102, 39) !important;
     color: #fff !important;
 }
+
 
 /* Style the container for pagination alignment */
 .bottom-right .dataTables_paginate {
@@ -94,9 +105,9 @@
 
 
 
-
 .d-flex.align-items-center {
-    justify-content: space-between;
+    justify-content:center;
+    gap: 10px;
 
 }
 
@@ -147,9 +158,10 @@
 
 
 </style>
-
-<div class="center-content">
+<div class="welcome-home">
     <h1>Welcome to Home</h1>
+</div>
+<div class="center-content">
 
     <div>
         <table class="table table-bordered" id="clients-table">
@@ -182,25 +194,25 @@
                     render: function(data, type, row) {
                         return `
                         <div class="d-flex align-items-center">
-                           <a href="/client/${row.id}/notes" class="btn btn-secondary btn-sm me-2">
-                                <img src="{{ asset('images/note.svg') }}" alt="Notes" style="width: 20px; height: 20px;">
-                            </a>
-                            
                             <div class="dropdown">
                                 <button class="btn btn-secondary btn-sm dropdown-toggle" type="button" id="dropdownMenuButton${row.id}" data-bs-toggle="dropdown" aria-expanded="false">
                                     <img src="{{ asset('images/menu.svg') }}" alt="Actions" style="width: 20px; height: 20px;">
                                 </button>
                                 <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton${row.id}">
+                                    <!-- Add Notes inside the dropdown -->
+                                    <li><a class="dropdown-item" href="/client/${row.id}/notes">Notes</a></li>
                                     <li><a class="dropdown-item" href="/client/edit/${row.id}">Update</a></li>
                                     <li><a class="dropdown-item delete-client" data-id="${row.id}" href="#">Delete</a></li>
                                 </ul>
                             </div>
                         </div>
+
                 `;
                     }
                 }
             ],
-            dom: '<"top"<"left-search"f><"right-button"B>>t<"bottom"<"bottom-left"l><"bottom-center"i><"bottom-right"p>>',
+            
+            dom: '<"top"<"left-search"f><"right-button"B>>t<"bottom"<"bottom-left"l><"bottom-right"ip>>',
             language: {
                 search: "Search: ",  // Customize the search box text
                 lengthMenu: "Show _MENU_ entries",  // Customize the length menu
@@ -218,7 +230,8 @@
                         window.location.href = '{{ route("client.add") }}'; // Redirect to the Add Client page
                     }
                 }
-            ]
+            ],
+            pagingType: 'numbers',
         });
 
         // Delete client functionality

@@ -124,9 +124,9 @@
     font-size: 14px;
 } */
 
-/* .margin-top {
-    margin-top: 20px; 
-} */
+.welcome-home {
+    margin-top: 40px; 
+}
 
 /* .margin-left {
     margin-left: 20px;
@@ -239,6 +239,19 @@ body {
 }
 
 
+.center-content {
+  display: flex; /* Use Flexbox for alignment */
+  justify-content: center; /* Center horizontally */
+  align-items: center; /* Center vertically if needed */
+  flex-wrap: wrap; /* Allow items to wrap if there are too many */
+}
+
+.center-content > * {
+  flex: 1; /* Allow all child elements to grow equally */
+  max-width: 900px; /* Set a maximum width for child elements, adjust as needed */
+  margin: 10px; /* Add some spacing between elements */
+  box-sizing: border-box; /* Include padding and border in the element's total width and height */
+}
 
 /* USING MEDIA QUERIES FOR RESPONSIVENESS OF FORM IN SMALLER SCREENS */
 @media (max-width: 1200px) {
