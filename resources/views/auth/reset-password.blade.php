@@ -58,21 +58,22 @@
         box-shadow: rgba(60, 66, 87, 0.16) 0px 0px 0px 1px;
     }
 
-    .btn-submit {
+    .button {
         width: 100%;
-        padding: 12px;
-        font-size: 16px;
-        font-weight: 600;
-        color: #ffffff;
-        background-color: #5469d4;
-        border: none;
-        border-radius: 4px;
+        padding: 12px 10px;
+        border: 0;
+        background: rgb(0, 177, 68);
+        border-radius: 3px;
+        margin-top: 10px;
+        color: #fff;
+        letter-spacing: 1px;
+        font-family: 'Rubik', sans-serif;
         cursor: pointer;
-        text-align: center;
     }
 
-    .btn-submit:hover {
-        background-color: #4357ad;
+
+    .button:hover {
+        background-color: rgb(0, 102, 39);
     }
 
     .error {
@@ -120,7 +121,7 @@
 
             <!-- Submit Button -->
             <div>
-                <button type="submit" class="btn-submit">
+                <button type="submit" class="button">
                     Reset Password
                 </button>
             </div>
