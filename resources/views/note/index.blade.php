@@ -92,6 +92,13 @@
         float: right !important;
     }
 
+
+    .d-flex.align-items-center {
+    justify-content:center;
+    gap: 10px;
+
+}
+
     /* Style for the button */
     .btn-secondary {
         background-color: #cdd0d3;
@@ -183,13 +190,12 @@
                     <div class="form-group">
                             <textarea class="form-field animation a3" name="content" id="update_content" required placeholder="Enter Note"
                             style="height:200px; width:400px;"></textarea>
-                          </div>
+                            
+                    </div>
+                    <button type="submit" class="button">Update Note</button>
                     </div>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="submit" class="button">Update Note</button>
-                </div>
+                
 
                 
             </form>
