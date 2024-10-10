@@ -8,29 +8,38 @@
 </head>
 <body>
 
-    <div class= "formbg">
-    <h1>Forgot Password</h1>
+    {{-- <div class= "formbg">
+    <h1>Forgot Password</h1> --}}
 
-    @if (session('status'))
-        <div class="mb-4 font-medium text-sm text-green-600">
-            {{ session('status') }}
-        </div>
-    @endif
+
 
     <form method="POST" action="{{ route('password.email') }}">
         @csrf
 
-        <div class="field">
-        <label for="email">Email Address</label>
-        <input id="email" type="email" name="email" required autofocus>
-        </div>
-        
-        @error('email')
-            <span class="error">{{ $message }}</span>
-        @enderror
 
-        <button type="submit" class="btn-submit">Send Password Reset Link</button>
-    </form>
-    </div>
+        <div class="container">
+            <div class="left">
+              <div class="header">
+                <h2 class="animation a1">Forgot Password</h2>
+                <h4 class="animation a2">Reset your account password using email</h4>
+              </div>
+              <div class="form">
+                <input type="email" id="email" name="email" required class="form-field animation a3" placeholder="Email Address">
+                @error('email')
+                <span class="error"> {{$message}} </span>
+                @enderror
+
+                @if (session('status'))
+                
+                    <h5 style="margin-top: 5px;">{{ session('status') }}</h5>
+            @endif
+  
+                <button class="animation a6">Reset Password</button>
+              </div>
+            </div>
+            <div type="submit" class="right"></div>
+          </div>
+
+
 </body>
 </html>

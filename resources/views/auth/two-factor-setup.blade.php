@@ -1,107 +1,57 @@
-<!DOCTYPE html>
-<html lang="en">
+@extends('layouts.app')
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Two Factor</title>
+@section('content')
     <style>
-        * {
-            padding: 0;
-            margin: 0;
-            box-sizing: border-box;
-            font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica Neue, Ubuntu, sans-serif;
-            color: #1a1f36;
-        }
+     .center-content{
+        text-align: center;
+     }
 
-        body {
-            background-color: #ffffff;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-        }
+     .margin-top-40{
+        margin-top: 40px;
+     }
+     .margin-top-20{
+        margin-top: 20px;
+     }
 
-        h2 {
-            margin-bottom: 24px;
-            color: #1a1f36;
-            font-size: 24px;
-            text-align: center;
-        }
 
-        .formbg {
-            width: 100%;
-            max-width: 448px;
-            padding: 48px;
-            background: #ffffff;
-            border-radius: 4px;
-            box-shadow: rgba(60, 66, 87, 0.12) 0px 7px 14px 0px, rgba(0, 0, 0, 0.12) 0px 3px 6px 0px;
-        }
+     .welcome-home {
+    margin-top: 40px; 
+}
 
-        .container {
-            text-align: center;
-            margin-top: 100px;
-        }
-
-        .button {
-            display: inline-block;
-            padding: 10px 20px;
-            margin: 10px;
-            background-color: #007BFF;
-            color: #fff;
-            text-decoration: none;
-            border-radius: 5px;
-            font-size: 16px;
-        }
-
-        .button:hover {
-            background-color: #0056b3;
-        }
-
-        .margin-top {
-            margin-top: 20px;
-        }
-
-        .dmargin-top {
-            margin-top: 40px;
-        }
     </style>
-</head>
+<div class="welcome-home">
+    <h1>Two Factor Setup</h1>
+</div>
+    <div class="center-content">
+        
 
 
-
-<body>
-    <div class="container">
-        <h1>Two Factor Setup</h1>
-
-        <div class="formbg">
             <form method="POST" action="{{ url('user/two-factor-authentication') }}">
                 @csrf
 
                 @if (!auth()->user()->two_factor_secret)
                     <div>
-                        You have not enabled 2FA
+                        <h5>You have not enabled 2FA</h5>
                     </div>
 
                     <button type="submit" class="button">Enable </button>
                 @else
                     <div>
-                        <h2>You have 2FA enabled</h2>
+                        <h5>You have 2FA enabled</h5>
                     </div>
 
-                    <div>
+                    <div class=margin-top-40>
                         Scan the following QR code into your phones authenticator application.
                     </div>
 
-                    <div class="margin-top">
+                    <div class="margin-top-20">
                         {!! auth()->user()->twoFactorQrCodeSvg() !!}
                     </div>
 
-                    <div class="dmargin-top">
+                    <div class="margin-top-40">
                         <h3> Recovery codes </h3>
-                        <div class="margin-top">
-                            <ul>
+                        <div class="margin-top-20">
+                            <ul style="list-style-type: none;">
                                 @foreach (json_decode(decrypt(auth()->user()->two_factor_recovery_codes, true)) as $code)
                                     <li> {{ $code }}</li>
                                 @endforeach
@@ -110,7 +60,7 @@
                     </div>
 
                     @method('DELETE')
-                    <div class="margin-top">
+                    <div class="margin-top-40">
                         <button type="submit" class="button"> Disable </button>
                     </div>
                 @endif
@@ -118,10 +68,10 @@
 
 
 
-
-            <a href="{{ route('home') }}" class="button">Home</a>
-        </div>
-
-</body>
-
-</html>
+{{-- 
+            <div class="back">
+            <a href="{{ route('client') }}" class="button">Back</a>
+            </div>
+        </div> --}}
+        
+@endsection

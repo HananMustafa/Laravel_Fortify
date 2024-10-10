@@ -1,16 +1,16 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container">
+<div class="center-content">
     <h1>Notes for {{ $client->name }}</h1>
 
     <form action="{{ route('notes.store', $client->id) }}" method="POST">
         @csrf
         <div class="form-group">
-            <label for="content">Add Note</label>
+            <label for="content">Add Note:</label>
             <textarea class="form-control" name="content" required></textarea>
         </div>
-        <button type="submit" class="btn btn-primary">Add Note</button>
+        <button type="submit" class="button">Add Note</button>
     </form>
 
     <hr>
