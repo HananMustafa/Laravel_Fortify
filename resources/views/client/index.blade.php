@@ -232,24 +232,6 @@
             ],
             pagingType: 'numbers',
         });
-
-        // // Show Update Modal with Client Data
-        // $(document).on('click', '.update-client', function() {
-        //     var clientId = $(this).data('id');
-        //     $.ajax({
-        //         url: '/client/edit/' + clientId,
-        //         method: 'GET',
-        //         success: function(data) {
-        //             // Populate the modal form with client data
-        //             $('#updateClientModal input[name="name"]').val(data.name);
-        //             $('#updateClientModal input[name="email"]').val(data.email);
-        //             $('#updateClientModal form').attr('action', '/client/update/' + clientId);
-        //             $('#updateClientModal').modal('show');
-        //         }
-        //     });
-        // });
-        $(document).ready(function() {
-    // Initialize DataTable (same as your current code)
     
     // Show Update Modal with Client Data
     $(document).on('click', '.update-client', function() {
@@ -273,7 +255,6 @@
             }
         });
     });
-});
     
 
         // Delete client functionality
