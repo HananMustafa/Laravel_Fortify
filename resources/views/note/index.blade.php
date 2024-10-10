@@ -229,7 +229,7 @@
                     }
                 }
             ],
-            dom: '<"top"<"left-search"f><"right-button"B>>t<"bottom"<"bottom-left"l><"bottom-right"ip>>',
+            dom: '<"top"<"left-search"f>>t<"bottom"<"bottom-left"l><"bottom-right"ip>>',
             language: {
                 search: "Search: ",
                 lengthMenu: "Show _MENU_ entries",
@@ -239,17 +239,17 @@
                     next: "Next"
                 }
             },
-            buttons: [
-                {
-                    text: 'Add Note',
-                    className: 'button',
-                    action: function(e, dt, node, config) {
-                        $('html, body').animate({
-                            scrollTop: 0
-                        }, 'slow');
-                    }
-                }
-            ],
+            // buttons: [
+            //     {
+            //         text: 'Add Note',
+            //         className: 'button',
+            //         action: function(e, dt, node, config) {
+            //             $('html, body').animate({
+            //                 scrollTop: 0
+            //             }, 'slow');
+            //         }
+            //     }
+            // ],
             pagingType: 'numbers',
         });
 
