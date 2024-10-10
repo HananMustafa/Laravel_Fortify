@@ -25,7 +25,6 @@
             margin-right: 10px;
         }
 
-
         .button:hover {
             background-color: rgb(0, 102, 39);
         }
@@ -45,6 +44,7 @@
         <a href="{{ route('login') }}">
             <button class="button">Login</button>
         </a>
+        
 </body>
 
 </html>
