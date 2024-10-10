@@ -176,16 +176,22 @@
                     <h5 class="modal-title" id="updateNoteModalLabel">Update Note</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
+
+
                 <div class="modal-body">
+                    <div class="Section-Form">
                     <div class="form-group">
-                        <label for="update_content">Note Content:</label>
-                        <textarea class="form-control" id="update_content" name="content" required></textarea>
+                            <textarea class="form-field animation a3" name="content" id="update_content" required placeholder="Enter Note"
+                            style="height:200px; width:400px;"></textarea>
+                          </div>
                     </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary">Update Note</button>
+                    <button type="submit" class="button">Update Note</button>
                 </div>
+
+                
             </form>
         </div>
     </div>
