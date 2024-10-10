@@ -162,7 +162,6 @@
     <h1>Welcome to Home</h1>
 </div>
 <div class="center-content">
-
     <div>
         <table class="table table-bordered" id="clients-table">
             <thead>
@@ -177,8 +176,12 @@
     </div>
 </div>
 
+<!-- Modal for Updating Client -->
+@include('client.modal.update')
+
 <script>
     $(document).ready(function() {
+        // Initialize DataTable
         $('#clients-table').DataTable({
             serverSide: true,
             ajax: '{{ route('clients.data') }}',
@@ -199,24 +202,20 @@
                                     <img src="{{ asset('images/menu.svg') }}" alt="Actions" style="width: 20px; height: 20px;">
                                 </button>
                                 <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton${row.id}">
-                                    <!-- Add Notes inside the dropdown -->
                                     <li><a class="dropdown-item" href="/client/${row.id}/notes">Notes</a></li>
-                                    <li><a class="dropdown-item" href="/client/edit/${row.id}">Update</a></li>
+                                    <li><a class="dropdown-item update-client" data-id="${row.id}" href="#">Update</a></li>
                                     <li><a class="dropdown-item delete-client" data-id="${row.id}" href="#">Delete</a></li>
                                 </ul>
                             </div>
-                        </div>
-
-                `;
+                        </div>`;
                     }
                 }
             ],
-            
             dom: '<"top"<"left-search"f><"right-button"B>>t<"bottom"<"bottom-left"l><"bottom-right"ip>>',
             language: {
-                search: "Search: ",  // Customize the search box text
-                lengthMenu: "Show _MENU_ entries",  // Customize the length menu
-                info: "Showing _START_ to _END_ of _TOTAL_ entries",  // Customize the table information
+                search: "Search:",
+                lengthMenu: "Show _MENU_ entries",
+                info: "Showing _START_ to _END_ of _TOTAL_ entries",
                 paginate: {
                     previous: "Previous",
                     next: "Next"
@@ -224,15 +223,58 @@
             },
             buttons: [
                 {
-                    text: 'Add Client', // Replace "Custom Button" with "Add Client"
+                    text: 'Add Client',
                     className: 'button',
-                    action: function(e, dt, node, config) {
-                        window.location.href = '{{ route("client.add") }}'; // Redirect to the Add Client page
+                    action: function() {
+                        window.location.href = '{{ route("client.add") }}';
                     }
                 }
             ],
             pagingType: 'numbers',
         });
+
+        // // Show Update Modal with Client Data
+        // $(document).on('click', '.update-client', function() {
+        //     var clientId = $(this).data('id');
+        //     $.ajax({
+        //         url: '/client/edit/' + clientId,
+        //         method: 'GET',
+        //         success: function(data) {
+        //             // Populate the modal form with client data
+        //             $('#updateClientModal input[name="name"]').val(data.name);
+        //             $('#updateClientModal input[name="email"]').val(data.email);
+        //             $('#updateClientModal form').attr('action', '/client/update/' + clientId);
+        //             $('#updateClientModal').modal('show');
+        //         }
+        //     });
+        // });
+        $(document).ready(function() {
+    // Initialize DataTable (same as your current code)
+    
+    // Show Update Modal with Client Data
+    $(document).on('click', '.update-client', function() {
+        var clientId = $(this).data('id');
+
+        // Make an AJAX call to fetch client data
+        $.ajax({
+            url: `/client/edit/${clientId}`,
+            method: 'GET',
+            success: function(response) {
+                // Populate modal fields with client data
+                $('#updateModal').find('input[name="name"]').val(response.client.name);
+                $('#updateModal').find('input[name="email"]').val(response.client.email);
+                $('#updateModal').find('form').attr('action', `/client/update/${clientId}`);
+
+                // Show the modal
+                $('#updateModal').modal('show');
+            },
+            error: function() {
+                alert('Failed to fetch client data.');
+            }
+        });
+    });
+});
+    
 
         // Delete client functionality
         $(document).on('click', '.delete-client', function() {

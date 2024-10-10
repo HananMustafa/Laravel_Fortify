@@ -38,7 +38,9 @@ class ClientController extends Controller
     public function edit($id)
     {
         $client = Client::findOrFail($id);
-        return view('client.update', compact('client'));
+        
+        // return view('client.update', compact('client'));
+        return response()->json(['client' => $client]);
     }
 
     public function update(Request $request, $id)
