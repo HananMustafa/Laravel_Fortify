@@ -9,15 +9,13 @@
         <div class="modal-body">
           <form id="updateClientForm" method="POST">
             @csrf
-            <div class="mb-3">
-              <label for="name" class="form-label">Name</label>
-              <input type="text" class="form-control" name="name" required>
+
+            <div class="Section-Form">
+              <input type="text" name="name" required class="form-field animation a3" placeholder="Name" >
+              <input type="email" id="email" name="email" required class="form-field animation a3" placeholder="Email Address" >
+              <button type="submit" class="button">Update Client</button>
             </div>
-            <div class="mb-3">
-              <label for="email" class="form-label">Email</label>
-              <input type="email" class="form-control" name="email" required>
-            </div>
-            <button type="submit" class="btn btn-primary">Update Client</button>
+
           </form>
         </div>
       </div>

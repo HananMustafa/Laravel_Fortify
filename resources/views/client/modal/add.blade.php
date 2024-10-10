@@ -8,15 +8,13 @@
             <div class="modal-body">
                 <form id="addClientForm">
                     @csrf
-                    <div class="mb-3">
-                        <label for="name" class="form-label">Name</label>
-                        <input type="text" class="form-control" id="name" name="name" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="email" class="form-label">Email</label>
-                        <input type="email" class="form-control" id="email" name="email" required>
-                    </div>
-                    <button type="submit" class="btn btn-primary">Add Client</button>
+
+                    <div class="Section-Form">
+                        <input type="text" name="name" required class="form-field animation a3" placeholder="Name">
+                        <input type="email" id="email" name="email" required class="form-field animation a3" placeholder="Email Address">
+                        <button type="submit" class="button">Add Client</button>
+                      </div>
+                      
                 </form>
             </div>
         </div>

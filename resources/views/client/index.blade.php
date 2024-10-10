@@ -178,6 +178,7 @@
 
 <!-- Modal for Adding Client -->
 @include('client.modal.add') <!-- Include the add modal -->
+@include('client.modal.update')
 
 <script>
     $(document).ready(function() {
