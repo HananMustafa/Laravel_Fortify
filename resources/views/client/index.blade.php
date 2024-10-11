@@ -205,7 +205,7 @@
                                 <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton${row.id}">
                                     <li><a class="dropdown-item" href="/client/${row.id}/notes">Notes</a></li>
                                     <li><a class="dropdown-item update-client" data-id="${row.id}" href="#">Update</a></li>
-                                    <li><a class="dropdown-item delete-client" data-id="${row.id}" href="#">Delete</a></li>
+                                    <li><a class="dropdown-item delete-client" data-id="${row.id}" href="#" onclick="confirmation(event)">Delete</a></li>
                                 </ul>
                             </div>
                         </div>`;
@@ -257,23 +257,24 @@
             });
         });
 
+
         // Delete client functionality
-        $(document).on('click', '.delete-client', function() {
-            var id = $(this).data('id');
-            if (confirm("Are you sure to delete this client?")) {
-                $.ajax({
-                    url: '{{ url("/client/delete") }}/' + id,
-                    type: 'DELETE',
-                    data: {
-                        "_token": "{{ csrf_token() }}",
-                    },
-                    success: function(response) {
-                        $('#clients-table').DataTable().ajax.reload();
-                        alert(response.success);
-                    }
-                });
-            }
-        });
+        // $(document).on('click', '.delete-client', function() {
+        //     var id = $(this).data('id');
+        //     if (confirm("Are you sure to delete this client?")) {
+        //         $.ajax({
+        //             url: '{{ url("/client/delete") }}/' + id,
+        //             type: 'DELETE',
+        //             data: {
+        //                 "_token": "{{ csrf_token() }}",
+        //             },
+        //             success: function(response) {
+        //                 $('#clients-table').DataTable().ajax.reload();
+        //                 alert(response.success);
+        //             }
+        //         });
+        //     }
+        // });
 
         // Handle form submission for adding a client
         $('#addClientForm').on('submit', function(e) {
@@ -295,4 +296,53 @@
         });
     });
 </script>
+
+<script type="text/javascript">
+
+    function confirmation(ev){
+        ev.preventDefault();
+
+        var id = ev.currentTarget.getAttribute('data-id');
+        var urlToRedirect= "/client/delete/"+id;
+        console.log(urlToRedirect);
+
+        swal({
+            title: "Are you sure to delete this",
+            text: "You won't be able to revert",
+            icon: "warning",
+            buttons: true,
+            dangerMode: true,
+        })
+
+        .then((willCancel) => {
+            console.log("Proceeding  request"); // Log if we proceed with delete
+            if (willCancel) {
+                console.log("Proceeding with DELETE request"); // Log if we proceed with delete
+                // Send DELETE request via fetch
+                fetch(urlToRedirect, {
+                    method: 'DELETE',
+                    headers: {
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'), // CSRF token
+                        'Content-Type': 'application/json'
+                    }
+                })
+                .then(response => {
+                    if (response.ok) {
+                        swal("Deleted!", "The record has been deleted.", "success")
+                        .then(() => {
+                            location.reload(); // Reload the page after successful deletion
+                        });
+                    } else {
+                        swal("Error", "Failed to delete the record.", "error");
+                    }
+                })
+                .catch(error => {
+                    swal("Error", "Something went wrong.", "error");
+                    console.error('Error:', error);
+                });
+            }
+        });
+    }
+
+    </script>
 @endsection
