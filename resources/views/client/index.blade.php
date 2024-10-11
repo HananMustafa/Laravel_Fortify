@@ -287,7 +287,19 @@
                 success: function(response) {
                     $('#addClientModal').modal('hide'); // Hide the modal
                     $('#clients-table').DataTable().ajax.reload(); // Reload the DataTable
-                    alert('Client added successfully.');
+                    // alert('Client added successfully.');
+
+
+
+        // Check if there is a success message in the session
+            swal({
+                title: "Success!",
+                text: "Client Added Successfully!", // Display the success message
+                icon: "success",
+                button: "OK",
+            });
+
+
                 },
                 error: function(xhr) {
                     alert('Error adding client: ' + xhr.responseJSON.message);
