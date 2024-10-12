@@ -22,17 +22,32 @@ Route::middleware(['auth', 'verified'])->get('/two-factor-setup', function () {
 Route::middleware(['auth', 'verified'])->get('/client', [ClientController::class, 'index'])->name('client');
 Route::middleware(['auth', 'verified'])->get('/home', [HomeController::class, 'index'])->name('home');
 
+// Route::middleware(['auth', 'verified'])->group(function () {
+//     Route::get('/client/add', [ClientController::class, 'create'])->name('client.add');
+//     Route::post('/client/store', [ClientController::class, 'store'])->name('client.store');
+//     Route::get('/client/edit/{id}', [ClientController::class, 'edit'])->name('client.edit');
+//     Route::post('/client/update/{id}', [ClientController::class, 'update'])->name('client.update');
+//     Route::delete('/client/delete/{id}', [ClientController::class, 'destroy'])->name('client.delete');
+
+//     // DataTables route to fetch client data
+//     Route::get('/clients/data', [ClientController::class, 'getData'])->name('clients.data');
+// });
+
 Route::middleware(['auth', 'verified'])->group(function () {
-    Route::get('/client/add', [ClientController::class, 'create'])->name('client.add');
-    Route::post('/client/store', [ClientController::class, 'store'])->name('client.store');
-    Route::get('/client/edit/{id}', [ClientController::class, 'edit'])->name('client.edit');
-    Route::post('/client/update/{id}', [ClientController::class, 'update'])->name('client.update');
-    Route::delete('/client/delete/{id}', [ClientController::class, 'destroy'])->name('client.delete');
-
-    // DataTables route to fetch client data
     Route::get('/clients/data', [ClientController::class, 'getData'])->name('clients.data');
-});
+    Route::prefix('/client')->group(function () {
+        Route::controller(ClientController::class)->group(function () {
+            Route::get('/add', 'create')->name('client.add');
+            Route::post('/store', 'store')->name('client.store');
+            Route::get('/edit/{id}', 'edit')->name('client.edit');
+            Route::post('/update/{id}', 'update')->name('client.update');
+            Route::delete('/delete/{id}', 'destroy')->name('client.delete');
 
+            
+        });
+    });
+
+});
 
 
 // Notes Routes

@@ -158,10 +158,8 @@
 
 
 </style>
-<div class="welcome-home">
-    <h1>Welcome to Home</h1>
-</div>
-<div class="center-content">
+
+{{-- <div class="center-content">
     <div>
         <table class="table table-bordered" id="clients-table">
             <thead>
@@ -174,11 +172,42 @@
             </thead>
         </table>
     </div>
-</div>
+</div> --}}
+    <div class="row">
+        <div class="welcome-home">
+            <h1>Welcome to Home</h1>
+        </div>
+        <div class="col-12">
+            <div class="table-responsive">
+                <table class="table table-bordered w-100" id="clients-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+    </div>
+
 
 <!-- Modal for Adding Client -->
 @include('client.modal.add') <!-- Include the add modal -->
 @include('client.modal.update')
+@if(session('success'))
+    <script>
+        swal({
+            title: "Success!",
+            text: "{{ session('success') }}", // Use the session message
+            icon: "success",
+            button: "OK",
+        });
+    </script>
+@endif
+
 
 <script>
     $(document).ready(function() {
@@ -253,7 +282,8 @@
                 },
                 error: function() {
                     alert('Failed to fetch client data.');
-                }
+                },
+         
             });
         });
 

@@ -3,10 +3,8 @@
 @section('content')
 
    
-    <div class="center-content">
+    <div class="welcome-home">
         <h1>Welcome to Home</h1>
-
-       
     </div>
 
   

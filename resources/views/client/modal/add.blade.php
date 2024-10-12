@@ -10,8 +10,11 @@
                     @csrf
 
                     <div class="Section-Form">
+
+                        <div class="center-70">
                         <input type="text" name="name" required class="form-field animation a3" placeholder="Name">
                         <input type="email" id="email" name="email" required class="form-field animation a3" placeholder="Email Address">
+                        </div>
                         <button type="submit" class="button">Add Client</button>
                       </div>
                       

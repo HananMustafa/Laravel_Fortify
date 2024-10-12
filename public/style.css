@@ -1,141 +1,15 @@
-/* * {
-    padding: 0;
-    margin: 0;
-    box-sizing: border-box;
-    font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica Neue, Ubuntu, sans-serif;
-    color: #1a1f36;
-} */
-
-/* body {
-    background-color: #ffffff;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    margin: 0;
-} */
-
-/* h2 {
-    margin-bottom: 24px;
-    color: #1a1f36;
-    font-size: 24px;
-    text-align: center;
-} */
-
-/* h1 {
-    margin-bottom: 24px;
-    font-size: 34px;
-    
-} */
-
-/* .formbg {
-    width: 100%;
-    max-width: 448px;
-    padding: 48px;
-    background: #ffffff;
-    border-radius: 4px;
-    box-shadow: rgba(60, 66, 87, 0.12) 0px 7px 14px 0px, rgba(0, 0, 0, 0.12) 0px 3px 6px 0px;
-}
-
-.field {
-    margin-bottom: 10px;
-} */
-
-/* .field label {
-    display: block;
-    margin-bottom: 8px;
-    font-weight: 600;
-    font-size: 16px;
-}
-
-.field input {
-    width: 100%;
-    padding: 8px 16px;
-    font-size: 16px;
-    line-height: 28px;
-    border: 1px solid rgba(60, 66, 87, 0.16);
-    border-radius: 4px;
-    outline: none;
-    background-color: #ffffff;
-    box-shadow: rgba(60, 66, 87, 0.16) 0px 0px 0px 1px;
-} */
-
-/* .btn-submit {
-    width: 100%;
-    padding: 12px;
-    font-size: 16px;
-    font-weight: 600;
-    color: #ffffff;
-    background-color: #5469d4;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    text-align: center;
-    margin-bottom: 24px;
-}
-
-.btn-submit:hover {
-    background-color: #4357ad;
-} */
-
-
-
-/*DASHBOARD CARD*/
-
-/* .card {
-    border: 1px solid rgba(60, 66, 87, 0.16);
-    border-radius: 4px;
-    padding: 24px;
-    margin-bottom: 16px;
-    box-shadow: rgba(60, 66, 87, 0.12) 0px 4px 8px 0px, rgba(0, 0, 0, 0.08) 0px 2px 4px 0px;
-    position: relative;
-    background-color: #ffffff;
-}
-.card h3 {
-    margin-bottom: 12px;
-    font-size: 20px;
-    color: #1a1f36;
-}
-.card p {
-    margin-bottom: 8px;
-    font-size: 16px;
-    color: #1a1f36;
-} */
-/* .delete-icon, .edit-icon {
-    position: absolute;
-    top: 16px;
-    font-size: 18px;
-    cursor: pointer;
-}
-.delete-icon {
-    right: 16px;
-    color: red;
-    border: none;
-    background: none;
-}
-.edit-icon {
-    right: 48px;
-    color: blue;
-    text-decoration: none;
-}
-
-.error {
-    color:red;
-    font-size: 14px;
-} */
 
 .welcome-home {
     margin-top: 40px; 
 }
 
-/* .margin-left {
-    margin-left: 20px;
-} */
 
 
 
-
-
+.center-70 {
+  margin: 0 auto;
+  width: 70%;
+}
 
 
 

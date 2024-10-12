@@ -143,11 +143,14 @@
     }
 </style>
 
-<div class="welcome-home">
-    <h1>Notes for {{ $client->name }}</h1>
-</div>
 
-<div class="center-content">
+
+
+<div class="row">
+    <div class="welcome-home">
+        <h1>Notes for {{ $client->name }}</h1>
+    </div>
+    <div class="col-12">
     <div>
         <form action="{{ route('notes.store', $client->id) }}" method="POST">
             @csrf
@@ -160,7 +163,7 @@
     </div>
 
     <div class="mt-4">
-        <table class="table table-bordered" id="notes-table">
+        <table class="table table-bordered w-100" id="notes-table">
             <thead>
                 <tr>
                     <th>ID</th>
@@ -170,8 +173,20 @@
             </thead>
         </table>
     </div>
+
+    </div>
 </div>
 
+@if(session('success'))
+    <script>
+        swal({
+            title: "Success!",
+            text: "{{ session('success') }}", // Use the session message
+            icon: "success",
+            button: "OK",
+        });
+    </script>
+@endif
 <!-- Update Note Modal -->
 <div class="modal fade" id="updateNoteModal" tabindex="-1" aria-labelledby="updateNoteModalLabel" aria-hidden="true">
     <div class="modal-dialog">
@@ -231,7 +246,7 @@
                                             <form action="{{ route('notes.destroy', [$client->id, '']) }}/${row.id}" method="POST" style="display:inline;">
                                                 @csrf
                                                 @method('DELETE')
-                                                <button type="submit" class="dropdown-item delete-note" data-id="${row.id}">Delete</button>
+                                                <button  class="dropdown-item delete-note" data-id="${row.id}">Delete</button>
                                             </form>
                                         </li>
                                     </ul>

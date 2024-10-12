@@ -77,6 +77,12 @@
         sidebar = body.querySelector('nav'),
         toggle = body.querySelector(".toggle");
 
+        // Ensure the sidebar is open by default
+    window.addEventListener('DOMContentLoaded', () => {
+        sidebar.classList.remove("close");
+    });
+    
+
     toggle.addEventListener("click", () => {
         sidebar.classList.toggle("close");
     });
