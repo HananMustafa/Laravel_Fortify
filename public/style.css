@@ -1,46 +1,23 @@
-
-.welcome-home {
-    margin-top: 40px; 
-}
-
-
-
-
-.center-70 {
-  margin: 0 auto;
-  width: 70%;
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-* { box-sizing: border-box; }
+/* Google Font Import - Poppins & Rubik*/
 @import url('https://fonts.googleapis.com/css?family=Rubik:400,500&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap");
 
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Poppins", "Rubik", sans-serif;
+}
 
 body {
-  font-family: 'Rubik', sans-serif;
+  background-color: #ffffff;
+  margin: 0;
+  color: #1a1f36;
+  font-family: "Poppins", "Rubik", sans-serif;
+
+  min-height: 100vh;
+  transition: var(--tran-05);
 }
 
 .container {
@@ -67,7 +44,6 @@ body {
   /* flex: 1; */
   background-color: black;
   transition: 1s;
-  /* background-image: url(https://images.unsplash.com/photo-1550745165-9bc0b252726f?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2250&q=80); */
   background-image: url("images/NerdFlow.jpg");
   background-size: cover;
   background-repeat: no-repeat;
@@ -181,85 +157,15 @@ body {
   margin-top: 5px;
 } 
 
-
-/* .animation {
-  animation-name: move;
-  animation-duration: .4s;
-  animation-fill-mode: both;
-  animation-delay: 2s;
+.welcome-home {
+  margin-top: 40px; 
 }
 
-.a1 {
-  animation-delay: 2s;
-}
-
-.a2 {
-  animation-delay: 2.1s;
-}
-
-.a3 {
-  animation-delay: 2.2s;
-}
-
-.a4 {
-  animation-delay: 2.3s;
-}
-
-.a5 {
-  animation-delay: 2.4s;
-}
-*/
-/* .a6 {
-  animation-delay: 2.5s;
-}  */
-
-/* @keyframes move {
-  0% {
-    opacity: 0;
-    visibility: hidden;
-    transform: translateY(-40px);
-  }
-
-  100% {
-    opacity: 1;
-    visibility: visible;
-    transform: translateY(0);
-  }
-}
-
-@keyframes left {
-  0% {
-    opacity: 0;
-    width: 0;
-  }
-
-  100% {
-    opacity: 1;
-    padding: 20px 40px;
-    width: 440px;
-  }
-} */
 
 
 
 
-
-
-
-
-
-
-
-
-
-/* Google Font Import - Poppins */
-@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap");
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: "Poppins", sans-serif;
-}
+/* SIDEBAR DESIGN */
 
 :root {
   /* ===== Colors ===== */
@@ -268,7 +174,7 @@ body {
   --primary-color: rgb(0, 177, 68);
   --primary-color-light: #f6f5ff;
   --toggle-color: #ddd;
-  --text-color: #707070;
+  --text-color: #818181;
 
   /* ====== Transition ====== */
   --tran-03: all 0.2s ease;
@@ -276,17 +182,7 @@ body {
   --tran-05: all 0.3s ease;
 }
 
-body {
-  min-height: 100vh;
-  background-color: var(--body-color);
-  transition: var(--tran-05);
-}
-body {
-  background-color: #ffffff;
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica Neue, Ubuntu, sans-serif;
-  color: #1a1f36;
-}
+
 
 ::selection {
   background-color: var(--primary-color);
@@ -322,7 +218,7 @@ body {
 }
 
 .sidebar.close {
-  width: 88px;
+  width: 100px;
 }
 .container-fluid {
   margin-left: 250px; /* Space for the sidebar */
@@ -461,7 +357,7 @@ header .image-text .profession {
 
 .sidebar li a:hover .icon,
 .sidebar li a:hover .text {
-  color: var(--sidebar-color);
+  color: white;
 }
 
 .sidebar .menu-bar {
@@ -504,3 +400,38 @@ header .image-text .profession {
 
 
 
+/*SIGNIN WITH LINKEDIN BUTTON*/
+.login-with-google-btn {
+  transition: background-color .3s, box-shadow .3s !important;
+
+  padding: 12px 16px 12px 42px !important;
+  border: none !important;
+  border-radius: 3px !important;
+  box-shadow: 0 -1px 0 rgba(0, 0, 0, .04), 0 1px 1px rgba(0, 0, 0, .25) !important;
+
+  color: #757575 !important;
+  font-size: 14px !important;
+  font-weight: 500 !important;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif !important;
+
+  background-image: url("images/linkedin-logo.png") !important;
+  background-color: white !important;
+  background-repeat: no-repeat !important;
+  background-position: 12px 11px !important;
+
+  &:hover {
+      box-shadow: 0 -1px 0 rgba(0, 0, 0, .04), 0 2px 4px rgba(0, 0, 0, .25) !important;
+  }
+
+  &:active {
+      background-color: #eeeeee !important;
+  }
+
+  &:focus {
+      outline: none !important;
+      box-shadow:
+          0 -1px 0 rgba(0, 0, 0, .04),
+          0 2px 4px rgba(0, 0, 0, .25),
+          0 0 0 3px #c8dafc !important;
+  }
+}

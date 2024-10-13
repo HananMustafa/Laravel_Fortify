@@ -4,6 +4,7 @@ use App\Http\Controllers\HomeController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ClientController;
 use App\Http\Controllers\NoteController;
+use App\Http\Controllers\linkedin;
 
 
 Route::get('/', function () {
@@ -60,3 +61,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::get('client/{id}/notes/data', [NoteController::class, 'getNotesData'])->name('notes.data');
 });
+
+
+
+// LINKED IN AUTH
+Route::get('/linkedin/redirect',[linkedin::class, 'redirectToLinkedin'])->name('linkedin.redirect');
+Route::get('/linkedin/auth/callback', [linkedin::class, 'handleLinkedinCallback'])->name('linkedin.callback');
