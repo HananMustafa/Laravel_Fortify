@@ -62,8 +62,18 @@ class linkedin extends Controller
 
         $tokenData = $response->json();
 
-        dd($tokenData);
+        // dd($tokenData);
         // dd($tokenData['access_token']);
+
+        if($tokenData['access_token']){
+            $token = $tokenData['access_token'];
+
+            $responseUserInfo = Http::withToken($token)->get('https://api.linkedin.com/v2/userinfo');
+
+            $userinfo = $responseUserInfo->json();
+
+            dd($userinfo);
+        }
 
     }
 }
