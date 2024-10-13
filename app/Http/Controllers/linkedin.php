@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
+use App\Models\User;
+use Illuminate\Support\Facades\Hash;
 
 class linkedin extends Controller
 {
@@ -39,7 +41,30 @@ class linkedin extends Controller
     }
 
 
-    public function handleLinkedinCallback (Request $request){
+    // public function handleLinkedinCallback (Request $request){
+
+
+
+        
+
+
+
+
+
+
+        
+
+    // }
+
+
+    public function handleLinkedinCallback(Request $request){
+        $tokenData = $this->getLinkedinToken($request);
+        $this->getLinkedinUserInfo($tokenData);
+    }
+
+
+    //Function 1: Fetch Token
+    public function getLinkedinToken(Request $request){
 
         $code = $request->get('code');
         $state = $request->get('state');
@@ -60,20 +85,47 @@ class linkedin extends Controller
             'client_secret' => $client_secret
         ]);
 
-        $tokenData = $response->json();
+        return $response->json();
+    }
 
-        // dd($tokenData);
-        // dd($tokenData['access_token']);
 
-        if($tokenData['access_token']){
+    //Function 2: get UserInfo using Token
+    public function getLinkedinUserInfo($tokenData){
             $token = $tokenData['access_token'];
 
             $responseUserInfo = Http::withToken($token)->get('https://api.linkedin.com/v2/userinfo');
 
             $userinfo = $responseUserInfo->json();
 
-            dd($userinfo);
-        }
 
+            $this->manageLinkedinUser($userinfo, $token);
     }
+
+
+
+    //Function 3: Save Token & UserInfo in database
+    public function manageLinkedinUser($userinfo, $token){
+            $name = $userinfo['name'];
+            $email = $userinfo['email'];
+
+            $existingUser = User::where('email', $email)->first();
+
+            if($existingUser){
+                $existingUser->linkedin_token = $token;
+                $existingUser->save();
+            } else{
+
+                User::create([
+                    'name' => $name,
+                    'email' => $email,
+                    'email_verified_At' => Carbon::now(),
+                    'linkedin_token' => $token,
+                    'password' => null
+                ]);
+            }
+
+
+            dd('USER LINKED');
+    }
+
 }
