@@ -5,7 +5,9 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use App\Models\User;
-use Illuminate\Support\Facades\Hash;
+use Carbon\Carbon;
+
+use Illuminate\Support\Facades\Auth;
 
 class linkedin extends Controller
 {
@@ -120,12 +122,14 @@ class linkedin extends Controller
                     'email' => $email,
                     'email_verified_At' => Carbon::now(),
                     'linkedin_token' => $token,
-                    'password' => null
+                    'password' => null,
                 ]);
+                dd($token);
             }
 
 
             dd('USER LINKED');
+            Auth::login($existingUser);
     }
 
 }
