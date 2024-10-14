@@ -48,6 +48,13 @@
                 </li>
 
                 <li class="nav-link">
+                    <a href="{{route('product.index')}}">
+                    <i class='bx bx-group icon'></i>
+                    <span class="text nav-text">Products</span>
+                    </a>
+                </li>
+
+                <li class="nav-link">
                     <a href="{{ route('two-factor-setup') }}">
                         <i class='bx bx-cog icon'></i>
                         <span class="text nav-text">Settings</span>

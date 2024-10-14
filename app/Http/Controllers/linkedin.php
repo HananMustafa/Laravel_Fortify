@@ -128,8 +128,9 @@ class linkedin extends Controller
             }
 
 
-            dd('USER LINKED');
-            Auth::login($existingUser);
+            //dd('USER LINKED');
+            // Auth::login($existingUser);
+           //  return view('home');
     }
 
 }
