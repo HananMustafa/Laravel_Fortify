@@ -5,7 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ClientController;
 use App\Http\Controllers\NoteController;
 use App\Http\Controllers\linkedin;
-use App\Http\Controllers\Product;
+use App\Http\Controllers\ProductController;
 
 
 Route::get('/', function () {
@@ -23,6 +23,7 @@ Route::middleware(['auth', 'verified'])->get('/two-factor-setup', function () {
 // Client CRUD Routes
 Route::middleware(['auth', 'verified'])->get('/client', [ClientController::class, 'index'])->name('client');
 Route::middleware(['auth', 'verified'])->get('/home', [HomeController::class, 'index'])->name('home');
+Route::middleware(['auth', 'verified'])->get('/product', [ProductController::class, 'index'])->name('product');
 
 // Route::middleware(['auth', 'verified'])->group(function () {
 //     Route::get('/client/add', [ClientController::class, 'create'])->name('client.add');
@@ -44,10 +45,24 @@ Route::middleware(['auth', 'verified'])->group(function () {
             Route::get('/edit/{id}', 'edit')->name('client.edit');
             Route::post('/update/{id}', 'update')->name('client.update');
             Route::delete('/delete/{id}', 'destroy')->name('client.delete');
-
-            
         });
     });
+
+
+        //Product Routes
+        Route::get('/products/data', [ProductController::class, 'getData'])->name('products.data');
+        Route::prefix('/product')->group(function () {
+            Route::controller(ProductController::class)->group(function () {
+                Route::get('/add', 'create')->name('product.add');
+                Route::post('/store', 'store')->name('product.store');
+                Route::get('/edit/{id}', 'edit')->name('product.edit');
+                Route::post('/update/{id}', 'update')->name('product.update');
+                Route::delete('/delete/{id}', 'destroy')->name('product.delete');
+    
+                
+            });
+        });
+
 
 });
 
@@ -61,13 +76,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::delete('/client/{clientId}/notes/{id}', [NoteController::class, 'destroy'])->name('notes.destroy');
 
     Route::get('client/{id}/notes/data', [NoteController::class, 'getNotesData'])->name('notes.data');
-
-
-
-
-
-    // products Routes
-    Route::get('/product', [Product::class, 'index'])->name('product.index');
 });
 
 

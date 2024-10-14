@@ -48,7 +48,7 @@
                 </li>
 
                 <li class="nav-link">
-                    <a href="{{route('product.index')}}">
+                    <a href="{{route('product')}}">
                     <i class='bx bx-group icon'></i>
                     <span class="text nav-text">Products</span>
                     </a>

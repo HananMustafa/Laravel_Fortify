@@ -32,7 +32,7 @@ class ClientController extends Controller
             'email' => $request->email,
         ]);
 
-        return redirect()->route('client.add')->with('success', 'Client added successfully.');
+        return redirect()->route('client')->with('success', 'Client added successfully.');
     }
 
     public function edit($id)

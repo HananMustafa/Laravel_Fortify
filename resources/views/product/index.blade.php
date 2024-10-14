@@ -164,9 +164,11 @@
         <div class="welcome-home">
             <h1>Products</h1>
         </div>
+        
         <div class="col-12">
+            <a onclick="window.location='{{ route("linkedin.redirect") }}'" class="btn btn-sm btn-primary">Link with Linkedin</a>
             <div class="table-responsive">
-                <table class="table table-bordered w-100" id="clients-table">
+                <table class="table table-bordered w-100" id="products-table">
                     <thead>
                         <tr>
                             <th>ID</th>
@@ -181,9 +183,9 @@
     </div>
 
 
-<!-- Modal for Adding Client -->
-{{-- @include('client.modal.add') 
-@include('client.modal.update') --}}
+<!-- Modal for Adding Product -->
+@include('product.modal.add') 
+@include('product.modal.update')
 @if(session('success'))
     <script>
         swal({
@@ -199,13 +201,13 @@
 <script>
     $(document).ready(function() {
         // Initialize DataTable
-        $('#clients-table').DataTable({
+        $('#products-table').DataTable({
             serverSide: true,
-            ajax: '{{ route('clients.data') }}',
+            ajax: '{{ route('products.data') }}',
             columns: [
                 { data: 'id', name: 'id' },
-                { data: 'name', name: 'name' },
-                { data: 'email', name: 'email' },
+                { data: 'title', name: 'title' },
+                { data: 'description', name: 'description' },
                 {
                     data: 'action',
                     name: 'action',
@@ -219,9 +221,8 @@
                                     <img src="{{ asset('images/menu.svg') }}" alt="Actions" style="width: 20px; height: 20px;">
                                 </button>
                                 <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton${row.id}">
-                                    <li><a class="dropdown-item" href="/client/${row.id}/notes">Notes</a></li>
-                                    <li><a class="dropdown-item update-client" data-id="${row.id}" href="#">Update</a></li>
-                                    <li><a class="dropdown-item delete-client" data-id="${row.id}" href="#" onclick="confirmation(event)">Delete</a></li>
+                                    <li><a class="dropdown-item update-product" data-id="${row.id}" href="#">Update</a></li>
+                                    <li><a class="dropdown-item delete-product" data-id="${row.id}" href="#" onclick="confirmation(event)">Delete</a></li>
                                 </ul>
                             </div>
                         </div>`;
@@ -243,75 +244,75 @@
                     text: 'Add Product',
                     className: 'button',
                     action: function() {
-                        $('#addClientModal').modal('show'); // Show the modal
+                        $('#addProductModal').modal('show'); // Show the modal
                     }
                 }
             ],
             pagingType: 'numbers',
         });
 
-        // Show Update Modal with Client Data
-        $(document).on('click', '.update-client', function() {
-            var clientId = $(this).data('id');
+        // Show Update Modal with Product Data
+        $(document).on('click', '.update-product', function() {
+            var productId = $(this).data('id');
 
-            // Make an AJAX call to fetch client data
+            // Make an AJAX call to fetch product data
             $.ajax({
-                url: `/client/edit/${clientId}`,
+                url: `/product/edit/${productId}`,
                 method: 'GET',
                 success: function(response) {
-                    // Populate modal fields with client data
-                    $('#updateModal').find('input[name="name"]').val(response.client.name);
-                    $('#updateModal').find('input[name="email"]').val(response.client.email);
-                    $('#updateModal').find('form').attr('action', `/client/update/${clientId}`);
+                    // Populate modal fields with product data
+                    $('#updateModal').find('input[title="title"]').val(response.product.title);
+                    $('#updateModal').find('input[description="description"]').val(response.product.description);
+                    $('#updateModal').find('form').attr('action', `/product/update/${productId}`);
 
                     // Show the modal
                     $('#updateModal').modal('show');
                 },
                 error: function() {
-                    alert('Failed to fetch client data.');
+                    alert('Failed to fetch product data.');
                 },
          
             });
         });
 
 
-        // Delete client functionality
-        // $(document).on('click', '.delete-client', function() {
+        // Delete product functionality
+        // $(document).on('click', '.delete-product', function() {
         //     var id = $(this).data('id');
-        //     if (confirm("Are you sure to delete this client?")) {
+        //     if (confirm("Are you sure to delete this product?")) {
         //         $.ajax({
-        //             url: '{{ url("/client/delete") }}/' + id,
+        //             url: '{{ url("/product/delete") }}/' + id,
         //             type: 'DELETE',
         //             data: {
         //                 "_token": "{{ csrf_token() }}",
         //             },
         //             success: function(response) {
-        //                 $('#clients-table').DataTable().ajax.reload();
+        //                 $('#products-table').DataTable().ajax.reload();
         //                 alert(response.success);
         //             }
         //         });
         //     }
         // });
 
-        // Handle form submission for adding a client
-        $('#addClientForm').on('submit', function(e) {
+        // Handle form submission for adding a product
+        $('#addProductForm').on('submit', function(e) {
             e.preventDefault(); // Prevent default form submission
 
             $.ajax({
-                url: '{{ route("client.store") }}',
+                url: '{{ route("product.store") }}',
                 type: 'POST',
                 data: $(this).serialize(),
                 success: function(response) {
-                    $('#addClientModal').modal('hide'); // Hide the modal
-                    $('#clients-table').DataTable().ajax.reload(); // Reload the DataTable
-                    // alert('Client added successfully.');
+                    $('#addProductModal').modal('hide'); // Hide the modal
+                    $('#products-table').DataTable().ajax.reload(); // Reload the DataTable
+                    // alert('Product added successfully.');
 
 
 
         // Check if there is a success message in the session
             swal({
                 title: "Success!",
-                text: "Client Added Successfully!", // Display the success message
+                text: "Product Added Successfully!", // Display the success message
                 icon: "success",
                 button: "OK",
             });
@@ -319,7 +320,7 @@
 
                 },
                 error: function(xhr) {
-                    alert('Error adding client: ' + xhr.responseJSON.message);
+                    alert('Error adding product: ' + xhr.responseJSON.message);
                 }
             });
         });
@@ -332,7 +333,7 @@
         ev.preventDefault();
 
         var id = ev.currentTarget.getAttribute('data-id');
-        var urlToRedirect= "/client/delete/"+id;
+        var urlToRedirect= "/product/delete/"+id;
         console.log(urlToRedirect);
 
         swal({
