@@ -84,3 +84,5 @@ Route::middleware(['auth', 'verified'])->group(function () {
 Route::get('/linkedin/redirect',[linkedin::class, 'redirectToLinkedin'])->name('linkedin.redirect');
 Route::get('/linkedin/auth/callback', [linkedin::class, 'handleLinkedinCallback'])->name('linkedin.callback');
 
+Route::post('/linkedin/postOnLinkedin', [linkedin::class, 'postOnLinkedin']);
+

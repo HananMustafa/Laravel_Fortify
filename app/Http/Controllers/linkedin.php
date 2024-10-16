@@ -11,67 +11,50 @@ use Illuminate\Support\Facades\Auth;
 
 class linkedin extends Controller
 {
-    // public function index(){
-    //     $repsonse = Http::get('https://www.linkedin.com/oauth/v2/authorization?',[
-    //         'response_type' => 'code',
-    //         'client_id' => '77qogskkj6bgop',
-    //         'redirect_uri' => 'http://127.0.0.1:8000/linkedin/code',
-    //         'state' => 'Hello404',
-    //         'scope' => 'openid email profile'
+    //Function to call the Linkedin Login Form
+   public function redirectToLinkedin(){
 
-    //     ]);
-
-    //     $jsonData = $repsonse->json();
-    //     dd($jsonData);
-
-    // }
-
-    public function redirectToLinkedin(){
-
+        $user_id = auth()->user()->id;
         $client_id= '77qogskkj6bgop';
         $redirected_uri= 'http://127.0.0.1:8000/linkedin/auth/callback';
-        $state= 'Hello01';
+        $state= $user_id;
+        // encrypt(auth()->user()->id);
         $url= 'https://www.linkedin.com/oauth/v2/authorization?' .http_build_query([
             'response_type' => 'code',
             'client_id' => $client_id,
             'redirect_uri' => $redirected_uri,
             'state' => $state,
-            'scope' => 'openid email profile'
+            'scope' => 'openid email profile w_member_social'
         ]);
 
         return redirect($url);
     }
 
 
-    // public function handleLinkedinCallback (Request $request){
-
-
-
-        
-
-
-
-
-
-
-        
-
-    // }
-
-
+    //It will recieve code and sent to getLinkedinToken
+    //It will recieve Token(from getLinedinToken) and sent to getLinkedinUserInfo
     public function handleLinkedinCallback(Request $request){
         $tokenData = $this->getLinkedinToken($request);
-        $this->getLinkedinUserInfo($tokenData);
+        $route =$this->getLinkedinUserInfo($tokenData);
+
+        if($route='home'){
+            return redirect()->route('product')->with('success','Linkedin connected successfully');
+        }else{
+            return redirect()->route('linkedin.redirect');
+        }
     }
 
 
     //Function 1: Fetch Token
+    //It will recieve code and request Token
     public function getLinkedinToken(Request $request){
 
         $code = $request->get('code');
         $state = $request->get('state');
 
-        if($state !== 'Hello01'){
+        $user_id = auth()->user()->id;
+        if($state !== "$user_id"){
+            dd($user_id, $state);
             abort(403, 'Invalid state Parameter');
         }
 
@@ -92,45 +75,132 @@ class linkedin extends Controller
 
 
     //Function 2: get UserInfo using Token
+    //It will recieve Token and request userInfo and sent to manageLinkedinUser
     public function getLinkedinUserInfo($tokenData){
+        
+        // Check if token is not empty
+        if(isset($tokenData['access_token'])){
             $token = $tokenData['access_token'];
+        }else{
+            return 'linkedin.redirect';
+        }
+            
 
             $responseUserInfo = Http::withToken($token)->get('https://api.linkedin.com/v2/userinfo');
 
             $userinfo = $responseUserInfo->json();
 
 
-            $this->manageLinkedinUser($userinfo, $token);
+            $route= $this->manageLinkedinUser($userinfo, $token);
+            return $route;
     }
 
 
 
     //Function 3: Save Token & UserInfo in database
+    //It will recieve Token & userInfo and save it in database
     public function manageLinkedinUser($userinfo, $token){
             $name = $userinfo['name'];
             $email = $userinfo['email'];
 
-            $existingUser = User::where('email', $email)->first();
+            $user_id = auth()->user()->id;
 
-            if($existingUser){
-                $existingUser->linkedin_token = $token;
-                $existingUser->save();
-            } else{
+            $existingUser = User::where('id', $user_id)->first();
 
-                User::create([
-                    'name' => $name,
-                    'email' => $email,
-                    'email_verified_At' => Carbon::now(),
-                    'linkedin_token' => $token,
-                    'password' => null,
-                ]);
-                dd($token);
+            //TOKEN SHOULD NOT BE NULL
+            if($token != null){
+                if($existingUser){
+                    $existingUser->linkedin_token = $token;
+                    $existingUser->save();
+                    //dd("OK Token:" ,$token, "Existing user: ", $existingUser);
+                } else{
+    
+                    User::create([
+                        'name' => $name,
+                        'email' => $email,
+                        'email_verified_At' => Carbon::now(),
+                        'linkedin_token' => $token,
+                        'password' => null,
+                    ]);
+                    //dd($token);
+                }
+
+                return 'home';
+            }else{
+                // return view('linkedin.redirect');
+                return 'linkedin.redirect';
             }
+            
 
 
-            //dd('USER LINKED');
+            // dd('USER LINKED');
+            //dd($token);
             // Auth::login($existingUser);
            //  return view('home');
+
+           //$id = Auth::user()->id;
+           //dd(auth()->user()->id);
+           //dd("HI");
+           //return view('home');
     }
 
+
+    public function postOnLinkedin(Request $request)
+    {
+        //Fetching user_id from users table
+        $user_id = auth()->user()->id;
+        $Token = User::where('id', $user_id)->value('linkedin_token');
+
+
+        // CONCATENATE TITLE & DESCRIPTION
+        //$productId = $request->input('id');
+        $title = $request->input('title');
+        $description = $request->input('description');
+        $combinedContent = $title . ' ' . $description;
+
+
+        //PREPARING REQUEST DATA
+            $url = 'https://api.linkedin.com/v2/ugcPosts'; 
+
+            $body = [
+                'author' => 'urn:li:person:IWC08E2_pe', 
+                'lifecycleState' => 'PUBLISHED',
+                'specificContent' => [
+                    'com.linkedin.ugc.ShareContent' => [
+                        'shareCommentary' => [
+                            'text' => $combinedContent
+                        ],
+                        'shareMediaCategory' => 'NONE'
+                    ]
+                ],
+                'visibility' => [
+                    'com.linkedin.ugc.MemberNetworkVisibility' => 'PUBLIC'
+                ]
+            ];
+
+
+
+            //POST request with headers and Bearer Token authorization
+            $response = Http::withHeaders([
+                'X-Restli-Protocol-Version' => '2.0.0',
+                'Content-Type' => 'application/json',
+            ])->withToken($Token) 
+            ->post($url, $body);
+
+
+
+            
+            //Check if the request was successful
+            if ($response->successful()) {
+                return response()->json([
+                    'message' => 'Post successfully published on LinkedIn!',
+                    'data' => $response->json(),
+                ]);
+            } else {
+                return response()->json([
+                    'message' => 'Failed to post on LinkedIn.',
+                    'error' => $response->body(), 
+                ], $response->status());
+        }
+    }
 }

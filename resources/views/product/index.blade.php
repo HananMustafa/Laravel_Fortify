@@ -225,6 +225,7 @@
                                     <li><a class="dropdown-item delete-product" data-id="${row.id}" href="#" onclick="confirmation(event)">Delete</a></li>
                                 </ul>
                             </div>
+                            <a class="postOnLinkedin" data-id="${row.id}" href="#">Linkedin</a>
                         </div>`;
                     }
                 }
@@ -275,6 +276,41 @@
             });
         });
 
+        $(document).on('click', '.postOnLinkedin', function (e){
+            e.preventDefault();
+
+            var productId = $(this).data('id');
+
+            // Get the row data using the DataTable instance
+            var table = $('#products-table').DataTable();
+            var rowData = table.row($(this).parents('tr')).data();
+
+            var title = rowData.title;
+            var description = rowData.description;
+
+            $.ajax({
+                url: '/linkedin/postOnLinkedin',
+                type: 'POST',
+                data: {
+                    _token: $('meta[name="csrf-token"]').attr('content'),
+                    id: productId,
+                    title: title,
+                    description: description
+                },
+                success: function(response){
+                    // alert(response.message);
+                    swal({
+                title: "Success!",
+                text: "Posted on Linkedin Successfully!", // Display the success message
+                icon: "success",
+                button: "OK",
+            });
+                },
+                error: function(xhr,status,error){
+                    alert('Error posting on Linkedin: '+error);
+                }
+            })
+        });
 
         // Delete product functionality
         // $(document).on('click', '.delete-product', function() {
