@@ -14,15 +14,13 @@ class linkedin extends Controller
     //Function to call the Linkedin Login Form
    public function redirectToLinkedin(){
 
-        $user_id = auth()->user()->id;
-        $client_id= '77qogskkj6bgop';
-        $redirected_uri= 'http://127.0.0.1:8000/linkedin/auth/callback';
+        $user_id = encrypt(auth()->user()->id);
         $state= $user_id;
         // encrypt(auth()->user()->id);
         $url= 'https://www.linkedin.com/oauth/v2/authorization?' .http_build_query([
             'response_type' => 'code',
-            'client_id' => $client_id,
-            'redirect_uri' => $redirected_uri,
+            'client_id' => config('services.linkedin.client_id'),
+            'redirect_uri' => config('services.linkedin.redirect'),
             'state' => $state,
             'scope' => 'openid email profile w_member_social'
         ]);
@@ -50,24 +48,24 @@ class linkedin extends Controller
     public function getLinkedinToken(Request $request){
 
         $code = $request->get('code');
-        $state = $request->get('state');
+        $state = decrypt($request->get('state'));
 
         $user_id = auth()->user()->id;
-        if($state !== "$user_id"){
-            dd($user_id, $state);
+        if($state !== $user_id){
+            // dd($user_id,'Userid & State are not equal' ,$state);
             abort(403, 'Invalid state Parameter');
         }
-
-        $client_id = '77qogskkj6bgop';
-        $client_secret = 'WPL_AP1.A5qTtZgedWOq32vV.l1ci1w==';
-        $redirectUri = 'http://127.0.0.1:8000/linkedin/auth/callback';
+        
+        // $client_id = '77qogskkj6bgop';
+        // $client_secret = 'WPL_AP1.A5qTtZgedWOq32vV.l1ci1w==';
+        // $redirectUri = 'http://127.0.0.1:8000/linkedin/auth/callback';
 
         $response = Http::asForm()->post('https://www.linkedin.com/oauth/v2/accessToken',[
             'grant_type' => 'authorization_code',
             'code' => $code,
-            'redirect_uri' => $redirectUri,
-            'client_id' => $client_id,
-            'client_secret' => $client_secret
+            'redirect_uri' => ('services.linkedin.redirect'),
+            'client_id' => config('services.linkedin.client_id'),
+            'client_secret' => config('services.linkedin.client_secret')
         ]);
 
         return $response->json();
