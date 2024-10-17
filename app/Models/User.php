@@ -23,6 +23,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'email',
         'password',
         'linkedin_token',
+        'linkedin_id',
         'email_verified_At'
     ];
 

@@ -166,7 +166,7 @@
         </div>
         
         <div class="col-12">
-            <a onclick="window.location='{{ route("linkedin.redirect") }}'" class="btn btn-sm btn-primary">Link with Linkedin</a>
+            <a class="btn btn-sm btn-primary LinkWithLinkedin" href="#">Link with Linkedin</a>
             <div class="table-responsive">
                 <table class="table table-bordered w-100" id="products-table">
                     <thead>
@@ -298,18 +298,48 @@
                     description: description
                 },
                 success: function(response){
-                    // alert(response.message);
-                    swal({
-                title: "Success!",
-                text: "Posted on Linkedin Successfully!", // Display the success message
-                icon: "success",
-                button: "OK",
-            });
+                    if(response.status == 'success'){
+                        swal({
+                        title: "Success!",
+                        text: response.message,
+                        icon: "success",
+                        button: "OK",
+                    });
+
+                    }else{
+                        swal({
+                        title: "Failed!",
+                        text: response.message,
+                        icon: "error",
+                        button: "OK",
+                    });
+                    }
                 },
                 error: function(xhr,status,error){
-                    alert('Error posting on Linkedin: '+error);
+                    swal({
+                        title: "Failed!",
+                        // text: error,
+                        text: 'Try connecting with linkedin again',
+                        icon: "error",
+                        button: "OK",
+                    });
                 }
             })
+        });
+
+
+        $(document).on('click', '.LinkWithLinkedin', function (e){
+            e.preventDefault();
+
+            
+            swal({
+                        title: "Success!",
+                        // text: error,
+                        text: 'okkkkk',
+                        icon: "success",
+                        button: "OK",
+                    });
+
         });
 
         // Delete product functionality

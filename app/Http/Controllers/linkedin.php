@@ -102,6 +102,7 @@ class linkedin extends Controller
     public function manageLinkedinUser($userinfo, $token){
             $name = $userinfo['name'];
             $email = $userinfo['email'];
+            $id = $userinfo['sub'];
 
             $user_id = auth()->user()->id;
 
@@ -111,6 +112,7 @@ class linkedin extends Controller
             if($token != null){
                 if($existingUser){
                     $existingUser->linkedin_token = $token;
+                    $existingUser->linkedin_id = $id;
                     $existingUser->save();
                     //dd("OK Token:" ,$token, "Existing user: ", $existingUser);
                 } else{
@@ -120,6 +122,7 @@ class linkedin extends Controller
                         'email' => $email,
                         'email_verified_At' => Carbon::now(),
                         'linkedin_token' => $token,
+                        'linkedin_id' => $id,
                         'password' => null,
                     ]);
                     //dd($token);
@@ -147,10 +150,14 @@ class linkedin extends Controller
 
     public function postOnLinkedin(Request $request)
     {
+        try{
         //Fetching user_id from users table
         $user_id = auth()->user()->id;
         $Token = User::where('id', $user_id)->value('linkedin_token');
+        $linkedin_id = User::where('id', $user_id)->value('linkedin_id');
 
+        if($Token!=null && $linkedin_id!=null){
+            
 
         // CONCATENATE TITLE & DESCRIPTION
         //$productId = $request->input('id');
@@ -158,12 +165,11 @@ class linkedin extends Controller
         $description = $request->input('description');
         $combinedContent = $title . ' ' . $description;
 
-
         //PREPARING REQUEST DATA
             $url = 'https://api.linkedin.com/v2/ugcPosts'; 
 
             $body = [
-                'author' => 'urn:li:person:IWC08E2_pe', 
+                'author' => 'urn:li:person:' . $linkedin_id, 
                 'lifecycleState' => 'PUBLISHED',
                 'specificContent' => [
                     'com.linkedin.ugc.ShareContent' => [
@@ -178,8 +184,6 @@ class linkedin extends Controller
                 ]
             ];
 
-
-
             //POST request with headers and Bearer Token authorization
             $response = Http::withHeaders([
                 'X-Restli-Protocol-Version' => '2.0.0',
@@ -187,20 +191,55 @@ class linkedin extends Controller
             ])->withToken($Token) 
             ->post($url, $body);
 
+            //EXCEPTION HANDLING FOR THE REQUEST
+            if($response->successful()){
+                return response()->json([
+                    'status' => 'success',
+                    'message' => 'Posted on Linkedin Sucessfully'
+                ]);
+            } else{
+                return response()->json([
+                    'status' => 'failed',
+                    'message' => 'Try connecting with linkedin again'
+                ]);
+            }
+
+
+
+
+
+        }else{
+
+            // TOKEN IS EMPTY
+            return response()->json([
+                'status' => 'failed',
+                'message' => 'First Connect with Linkedin'
+            ]);
+        }
+
+
+    }catch(\Exception $e){
+
+        return response()->json([
+            'status' => 'failed',
+            'message' => 'Try connecting with linkedin again'
+        ]);
+    }
+
 
 
             
             //Check if the request was successful
-            if ($response->successful()) {
-                return response()->json([
-                    'message' => 'Post successfully published on LinkedIn!',
-                    'data' => $response->json(),
-                ]);
-            } else {
-                return response()->json([
-                    'message' => 'Failed to post on LinkedIn.',
-                    'error' => $response->body(), 
-                ], $response->status());
-        }
+        //     if ($response->successful()) {
+        //         return response()->json([
+        //             'message' => 'Post successfully published on LinkedIn!',
+        //             'status' => 'success',
+        //         ]);
+        //     } else {
+        //         return response()->json([
+        //             'message' => 'Failed to post on LinkedIn.',
+        //             'status' => 'failed', 
+        //         ], );
+        // }
     }
 }
