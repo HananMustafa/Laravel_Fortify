@@ -166,7 +166,7 @@
         </div>
         
         <div class="col-12">
-            <a class="btn btn-sm btn-primary LinkWithLinkedin" href="#">Link with Linkedin</a>
+            <a onclick="window.location='{{ route("linkedin.redirect") }}'" class="btn btn-sm btn-primary">Link with Linkedin</a>
             <div class="table-responsive">
                 <table class="table table-bordered w-100" id="products-table">
                     <thead>
@@ -192,6 +192,16 @@
             title: "Success!",
             text: "{{ session('success') }}", // Use the session message
             icon: "success",
+            button: "OK",
+        });
+    </script>
+@endif
+@if(session('error'))
+    <script>
+        swal({
+            title: "Failed!",
+            text: "{{ session('error') }}", // Use the session message
+            icon: "error",
             button: "OK",
         });
     </script>
@@ -325,21 +335,6 @@
                     });
                 }
             })
-        });
-
-
-        $(document).on('click', '.LinkWithLinkedin', function (e){
-            e.preventDefault();
-
-            
-            swal({
-                        title: "Success!",
-                        // text: error,
-                        text: 'okkkkk',
-                        icon: "success",
-                        button: "OK",
-                    });
-
         });
 
         // Delete product functionality
