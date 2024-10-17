@@ -38,7 +38,7 @@ class linkedin extends Controller
         $route =$this->getLinkedinUserInfo($tokenData);
 
         if($route='home'){
-            return redirect()->route('product')->with('success','Linkedin connected successfully');
+            return redirect()->route('two-factor-setup')->with('success','Linkedin connected successfully');
         }else{
             return redirect()->route('linkedin.redirect');
         }

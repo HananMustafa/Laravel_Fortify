@@ -82,6 +82,27 @@
         }
     </style>
 
+    @if(session('success'))
+    <script>
+        swal({
+            title: "Success!",
+            text: "{{ session('success') }}", // Use the session message
+            icon: "success",
+            button: "OK",
+        });
+    </script>
+    @endif
+    @if(session('error'))
+    <script>
+        swal({
+            title: "Failed!",
+            text: "{{ session('error') }}", // Use the session message
+            icon: "error",
+            button: "OK",
+        });
+    </script>
+    @endif
+
     <div class="row">
         <div class="col-12">
     <!-- Two Factor Setup Page -->
