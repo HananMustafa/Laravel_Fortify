@@ -166,7 +166,6 @@
         </div>
         
         <div class="col-12">
-            <a onclick="window.location='{{ route("linkedin.redirect") }}'" class="btn btn-sm btn-primary">Link with Linkedin</a>
             <div class="table-responsive">
                 <table class="table table-bordered w-100" id="products-table">
                     <thead>

@@ -2,76 +2,141 @@
 
 @section('content')
     <style>
-     .center-content{
-        text-align: center;
-     }
+        /* Card Styles */
+        .card {
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            /* max-width: 800px; */
+            margin: 50px auto;
+        }
 
-     .margin-top-40{
-        margin-top: 40px;
-     }
-     .margin-top-20{
-        margin-top: 20px;
-     }
+        /* Section Heading */
+        .card h1 {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            color: #333;
+        }
 
+        /* Section Lines */
+        .section-line {
+            border-bottom: 1px solid #ddd;
+            margin: 20px 0;
+        }
 
-     .welcome-home {
-    margin-top: 40px; 
-}
+        /* Button Styles */
+        .button {
+            background-color: #28a745;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 20px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
 
+        .button:hover {
+            background-color: #218838;
+        }
+
+        /* Disable Button */
+        .button-disable {
+            background-color: #dc3545;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            float: right;
+        }
+
+        .button-disable:hover {
+            background-color: #c82333;
+        }
+
+        /* Flex for left-right alignment */
+        .flex-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        /* QR code and recovery codes */
+        .qr-code {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .recovery-codes ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .recovery-codes li {
+            background-color: #f9f9f9;
+            margin-bottom: 10px;
+            padding: 10px;
+            border-radius: 5px;
+        }
     </style>
-<div class="welcome-home">
-    <h1>Two Factor Setup</h1>
-</div>
-    <div class="center-content">
-        
+
+    <div class="row">
+        <div class="col-12">
+    <!-- Two Factor Setup Page -->
+    <div class="card">
+        <!-- Section Title -->
+        <div class="flex-container">
+            <h1>Security</h1>
+        </div>
+
+        <div class="section-line"></div>
+        <div class="flex-container">
+            <div><strong>Connect with Linkedin</strong></div>
+            <button type="submit" onclick="window.location='{{ route("linkedin.redirect") }}'" class="button">Connect</button>
+        </div>
 
 
-            <form method="POST" action="{{ url('user/two-factor-authentication') }}">
-                @csrf
+        <div class="section-line"></div>
 
-                @if (!auth()->user()->two_factor_secret)
-                    <div>
-                        <h5>You have not enabled 2FA</h5>
-                    </div>
+        <!-- Enable/Disable 2FA Section -->
+        <form method="POST" action="{{ url('user/two-factor-authentication') }}">
+            @csrf
 
-                    <button type="submit" class="button">Enable </button>
-                @else
-                    <div>
-                        <h5>You have 2FA enabled</h5>
-                    </div>
+            <!-- If 2FA is not enabled -->
+            @if (!auth()->user()->two_factor_secret)
+                <div class="flex-container">
+                    <div><strong>You have not enabled 2FA</strong></div>
+                    <button type="submit" class="button">Enable</button>
+                </div>
 
-                    <div class=margin-top-40>
-                        Scan the following QR code into your phones authenticator application.
-                    </div>
+            @else
+                <!-- If 2FA is enabled -->
+                <div class="flex-container">
+                    <div><strong>You have 2FA enabled</strong></div>
+                    <button type="submit" class="button-disable">Disable</button>
+                </div>
 
-                    <div class="margin-top-20">
-                        {!! auth()->user()->twoFactorQrCodeSvg() !!}
-                    </div>
+                <div class="qr-code">
+                    <h5>Scan this QR code with your authenticator app</h5>
+                    {!! auth()->user()->twoFactorQrCodeSvg() !!}
+                </div>
 
-                    <div class="margin-top-40">
-                        <h3> Recovery codes </h3>
-                        <div class="margin-top-20">
-                            <ul style="list-style-type: none;">
-                                @foreach (json_decode(decrypt(auth()->user()->two_factor_recovery_codes, true)) as $code)
-                                    <li> {{ $code }}</li>
-                                @endforeach
-                            </ul>
-                        </div>
-                    </div>
+                <div class="recovery-codes">
+                    <h3>Recovery Codes</h3>
+                    <ul>
+                        @foreach (json_decode(decrypt(auth()->user()->two_factor_recovery_codes, true)) as $code)
+                            <li>{{ $code }}</li>
+                        @endforeach
+                    </ul>
+                </div>
 
-                    @method('DELETE')
-                    <div class="margin-top-40">
-                        <button type="submit" class="button"> Disable </button>
-                    </div>
-                @endif
-            </form>
+                <!-- Include DELETE method for disabling 2FA -->
+                @method('DELETE')
+            @endif
+        </form>
+    </div>
 
-
-
-{{-- 
-            <div class="back">
-            <a href="{{ route('client') }}" class="button">Back</a>
-            </div>
-        </div> --}}
-        
+        </div></div>
 @endsection
