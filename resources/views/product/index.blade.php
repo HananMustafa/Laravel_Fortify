@@ -271,8 +271,8 @@
                 method: 'GET',
                 success: function(response) {
                     // Populate modal fields with product data
-                    $('#updateModal').find('input[title="title"]').val(response.product.title);
-                    $('#updateModal').find('input[description="description"]').val(response.product.description);
+                    $('#updateModal').find('input[name="title"]').val(response.product.title);
+                    $('#updateModal').find('input[name="description"]').val(response.product.description);
                     $('#updateModal').find('form').attr('action', `/product/update/${productId}`);
 
                     // Show the modal
@@ -366,6 +366,7 @@
                     $('#addProductModal').modal('hide'); // Hide the modal
                     $('#products-table').DataTable().ajax.reload(); // Reload the DataTable
                     // alert('Product added successfully.');
+                    $('#addProductForm')[0].reset();
 
 
 

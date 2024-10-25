@@ -63,10 +63,11 @@ class linkedin extends Controller
         $response = Http::asForm()->post('https://www.linkedin.com/oauth/v2/accessToken',[
             'grant_type' => 'authorization_code',
             'code' => $code,
-            'redirect_uri' => ('services.linkedin.redirect'),
+            'redirect_uri' => config('services.linkedin.redirect'),
             'client_id' => config('services.linkedin.client_id'),
             'client_secret' => config('services.linkedin.client_secret')
         ]);
+        //dd($response->json());
 
         return $response->json();
     }
