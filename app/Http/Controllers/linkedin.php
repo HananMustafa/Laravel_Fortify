@@ -55,10 +55,6 @@ class linkedin extends Controller
             // dd($user_id,'Userid & State are not equal' ,$state);
             abort(403, 'Invalid state Parameter');
         }
-        
-        // $client_id = '77qogskkj6bgop';
-        // $client_secret = 'WPL_AP1.A5qTtZgedWOq32vV.l1ci1w==';
-        // $redirectUri = 'http://127.0.0.1:8000/linkedin/auth/callback';
 
         $response = Http::asForm()->post('https://www.linkedin.com/oauth/v2/accessToken',[
             'grant_type' => 'authorization_code',
@@ -67,7 +63,6 @@ class linkedin extends Controller
             'client_id' => config('services.linkedin.client_id'),
             'client_secret' => config('services.linkedin.client_secret')
         ]);
-        //dd($response->json());
 
         return $response->json();
     }
@@ -133,17 +128,6 @@ class linkedin extends Controller
                 return 'linkedin.redirect';
             }
             
-
-
-            // dd('USER LINKED');
-            //dd($token);
-            // Auth::login($existingUser);
-           //  return view('home');
-
-           //$id = Auth::user()->id;
-           //dd(auth()->user()->id);
-           //dd("HI");
-           //return view('home');
     }
 
 
@@ -225,20 +209,5 @@ class linkedin extends Controller
         ]);
     }
 
-
-
-            
-            //Check if the request was successful
-        //     if ($response->successful()) {
-        //         return response()->json([
-        //             'message' => 'Post successfully published on LinkedIn!',
-        //             'status' => 'success',
-        //         ]);
-        //     } else {
-        //         return response()->json([
-        //             'message' => 'Failed to post on LinkedIn.',
-        //             'status' => 'failed', 
-        //         ], );
-        // }
     }
 }
