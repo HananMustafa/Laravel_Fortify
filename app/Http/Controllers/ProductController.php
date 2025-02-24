@@ -1,11 +1,11 @@
 <?php
 
 namespace App\Http\Controllers;
-
 use Illuminate\Http\Request;
 use App\Models\Product;
 use Yajra\DataTables\Facades\DataTables;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\File;
 
 class ProductController extends Controller
 {
@@ -23,12 +23,25 @@ class ProductController extends Controller
         $request->validate([
             'title' => 'required',
             'description' => 'required',
+            'image' => 'nullable|mimes:png,jpg,jpeg,webp'
         ]);
+
+        $path=null;
+        $filename=null;
+        if($request->has('image')){
+
+            $file = $request->file('image');
+            $extension = $file->getClientOriginalExtension();
+            $filename = time().'.'.$extension;
+            $path = 'uploads/products/';
+            $file->move($path,$filename);
+        }
 
         Product::create([
             'user_id' => Auth::id(),
             'title' => $request->title,
             'description' => $request->description,
+            'image' => $path.$filename
         ]);
 
         return redirect()->route('product')->with('success', 'Product added successfully.');
@@ -44,20 +57,47 @@ class ProductController extends Controller
 
     public function update(Request $request, $id)
     {
+
         $request->validate([
             'title' => 'required',
             'description' => 'required',
+            'image' => 'nullable|mimes:png,jpg,jpeg,webp'
         ]);
 
         $product = Product::findOrFail($id);
-        $product->update($request->only('title', 'description'));
+
+        if($request->has('image')){
+
+            $file = $request->file('image');
+            $extension = $file->getClientOriginalExtension();
+            $filename = time().'.'.$extension;
+            $path = 'uploads/products/';
+            $file->move($path,$filename);
+
+            if(File::exists($product->image)){
+                File::delete($product->image);
+            }
+        }
+
+        $product->update([
+            'title' => $request->input('title'),
+            'description' => $request->input('description'),
+            'image' => $path . $filename
+        ]);
+
 
         return redirect()->route('product')->with('success', 'Product updated successfully.');
     }
 
     public function destroy($id)
     {
-        Product::findOrFail($id)->delete();
+        $product = Product::findOrFail($id);
+
+        if(File::exists($product->image)){
+            File::delete($product->image);
+        }
+        
+        $product->delete();
 
         return response()->json(['success' => 'Product deleted successfully']);
     }

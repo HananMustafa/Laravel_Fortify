@@ -12,12 +12,19 @@
                     <div class="Section-Form">
 
                         <div class="center-70">
-                        <input type="text" name="title" required class="form-field animation a3" placeholder="Title">
-                        <input type="text" id="description" name="description" required class="form-field animation a3" placeholder="Description">
+                            <input type="text" name="title" required class="form-field animation a3"
+                                placeholder="Title">
+                            <input type="text" id="description" name="description" required
+                                class="form-field animation a3" placeholder="Description">
+                        </div>
+
+                        <div class="mb-3">
+                            <label>Upload File/Image</label>
+                            <input type="file" name="image" class="form-control" />
                         </div>
                         <button type="submit" class="button">Add Product</button>
-                      </div>
-                      
+                    </div>
+
                 </form>
             </div>
         </div>
