@@ -9,7 +9,7 @@
                 <form id="addProductForm">
                     @csrf
 
-                    <div class="Section-Form">
+                    <div class="mx-5">
 
                         <div class="center-70">
                             <input type="text" name="title" required class="form-field animation a3"
@@ -18,11 +18,14 @@
                                 class="form-field animation a3" placeholder="Description">
                         </div>
 
-                        <div class="mb-3">
-                            <label>Upload File/Image</label>
-                            <input type="file" name="image" class="form-control" />
+                        <div class="mt-3">
+                            <input type="file" name="image" />
                         </div>
-                        <button type="submit" class="button">Add Product</button>
+                        <div class= "Section-Form">
+
+                            <button type="submit" class="button">Add Product</button>
+                        </div>
+
                     </div>
 
                 </form>
