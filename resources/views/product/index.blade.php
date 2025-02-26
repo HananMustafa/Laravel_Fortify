@@ -356,15 +356,32 @@
                 var title = rowData.title;
                 var description = rowData.description;
 
+                // Get the image path from the row (if exists)
+                var imageElement = $(this).closest('tr').find('td img'); // Find image in the row
+                var imageSrc = imageElement.length > 0 ? imageElement.attr('src') : null; // Get src if exists
+
+                if (imageSrc) {
+                    var baseUrl = "{{ asset('') }}"; // Laravel base URL
+                    imageSrc = imageSrc.replace(baseUrl, ''); // Remove base URL to get relative path
+                }
+
+                // Create data object
+                var requestData = {
+                    _token: $('meta[name="csrf-token"]').attr('content'),
+                    id: productId,
+                    title: title,
+                    description: description
+                };
+
+                // Add image only if it exists
+                if (imageSrc) {
+                    requestData.image = imageSrc;
+                }
+
                 $.ajax({
                     url: '/linkedin/postOnLinkedin',
                     type: 'POST',
-                    data: {
-                        _token: $('meta[name="csrf-token"]').attr('content'),
-                        id: productId,
-                        title: title,
-                        description: description
-                    },
+                    data: requestData,
                     success: function(response) {
                         if (response.status == 'success') {
                             swal({
@@ -387,7 +404,7 @@
                         swal({
                             title: "Failed!",
                             // text: error,
-                            text: 'Try connecting with linkedin again',
+                            text: 'OOTry connecting with linkedin again',
                             icon: "error",
                             button: "OK",
                         });

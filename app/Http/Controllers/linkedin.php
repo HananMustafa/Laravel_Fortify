@@ -7,6 +7,8 @@ use Illuminate\Support\Facades\Http;
 use App\Models\User;
 use Carbon\Carbon;
 
+use Illuminate\Support\Facades\Storage;
+
 use Illuminate\Support\Facades\Auth;
 
 class linkedin extends Controller
@@ -133,81 +135,280 @@ class linkedin extends Controller
 
     public function postOnLinkedin(Request $request)
     {
-        try{
-        //Fetching user_id from users table
-        $user_id = auth()->user()->id;
-        $Token = User::where('id', $user_id)->value('linkedin_token');
-        $linkedin_id = User::where('id', $user_id)->value('linkedin_id');
 
-        if($Token!=null && $linkedin_id!=null){
-            
-
-        // CONCATENATE TITLE & DESCRIPTION
-        //$productId = $request->input('id');
         $title = $request->input('title');
         $description = $request->input('description');
-        $combinedContent = $title . ' ' . $description;
-
-        //PREPARING REQUEST DATA
-            $url = 'https://api.linkedin.com/v2/ugcPosts'; 
-
-            $body = [
-                'author' => 'urn:li:person:' . $linkedin_id, 
-                'lifecycleState' => 'PUBLISHED',
-                'specificContent' => [
-                    'com.linkedin.ugc.ShareContent' => [
-                        'shareCommentary' => [
-                            'text' => $combinedContent
-                        ],
-                        'shareMediaCategory' => 'NONE'
-                    ]
-                ],
-                'visibility' => [
-                    'com.linkedin.ugc.MemberNetworkVisibility' => 'PUBLIC'
-                ]
-            ];
-
-            //POST request with headers and Bearer Token authorization
-            $response = Http::withHeaders([
-                'X-Restli-Protocol-Version' => '2.0.0',
-                'Content-Type' => 'application/json',
-            ])->withToken($Token) 
-            ->post($url, $body);
-
-            //EXCEPTION HANDLING FOR THE REQUEST
-            if($response->successful()){
-                return response()->json([
-                    'status' => 'success',
-                    'message' => 'Posted on Linkedin Sucessfully'
-                ]);
-            } else{
-                return response()->json([
-                    'status' => 'failed',
-                    'message' => 'Try connecting with linkedin again'
-                ]);
-            }
 
 
-
-
-
+        if($request->has('image')){
+            $Response = $this->imagePost($request->image);
         }else{
+            $Response = $this->textPost($title,$description);
+        }
 
-            // TOKEN IS EMPTY
+        
+
+
+
+        
+
+        if($Response == 200){
+
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Posted on Linkedin Sucessfully'
+            ]);
+
+        }else if($Response == 500 || $textResponse == 401){
+
+            return response()->json([
+                'status' => 'failed',
+                'message' => 'Try connecting with linkedin again'
+            ]);
+
+        }else if($Response == 404){
+
+            //TOKEN IS EMPTY
             return response()->json([
                 'status' => 'failed',
                 'message' => 'First Connect with Linkedin'
             ]);
+
+        }else{
+
+            return response()->json([
+                'status' => 'failed',
+                'message' => 'Try connecting with linkedin again'
+            ]);
+
         }
 
 
-    }catch(\Exception $e){
 
-        return response()->json([
-            'status' => 'failed',
-            'message' => 'Try connecting with linkedin again'
-        ]);
-    }
+
+        
 
     }
+
+
+
+    public function textPost($title, $description){
+
+        try{
+            //Fetching user_id from users table
+            $user_id = auth()->user()->id;
+            $Token = User::where('id', $user_id)->value('linkedin_token');
+            $linkedin_id = User::where('id', $user_id)->value('linkedin_id');
+    
+            if($Token!=null && $linkedin_id!=null){
+
+            $combinedContent = $title . ' ' . $description;
+    
+            //PREPARING REQUEST DATA
+                $url = 'https://api.linkedin.com/v2/ugcPosts'; 
+    
+                $body = [
+                    'author' => 'urn:li:person:' . $linkedin_id, 
+                    'lifecycleState' => 'PUBLISHED',
+                    'specificContent' => [
+                        'com.linkedin.ugc.ShareContent' => [
+                            'shareCommentary' => [
+                                'text' => $combinedContent
+                            ],
+                            'shareMediaCategory' => 'NONE'
+                        ]
+                    ],
+                    'visibility' => [
+                        'com.linkedin.ugc.MemberNetworkVisibility' => 'PUBLIC'
+                    ]
+                ];
+    
+                //POST request with headers and Bearer Token authorization
+                $response = Http::withHeaders([
+                    'X-Restli-Protocol-Version' => '2.0.0',
+                    'Content-Type' => 'application/json',
+                ])->withToken($Token) 
+                ->post($url, $body);
+    
+                //EXCEPTION HANDLING FOR THE REQUEST
+                if($response->successful()){
+                    return 200;
+                } else{
+                    return 401;
+                }
+    
+            }else{
+                return 404;
+            }
+    
+    
+        }catch(\Exception $e){
+            return 500;
+        }
+
+    }
+
+
+    public function imagePost($image){
+        $imagePath = public_path($image); // Convert relative path to full system path
+        $uploadUrl = null;
+        $asset = null;
+
+        $registerRes = $this->registerImage();
+        $decodedRegisterRes = $registerRes->getData(true);
+
+        if($decodedRegisterRes['status'] == 200){
+            
+            $uploadUrl = $decodedRegisterRes['uploadUrl'];
+            $asset = $decodedRegisterRes['asset'];
+
+            //YAHA PE AA K MERI BASS HOGYI HAI BHAI
+            //ISSE PEECHE UNDO MAT KRNA, BHOT GANDD HAI
+            //I SHOULD RE-WRITE THE UPLOADIMAGE API CALL!
+            //ALLAH HAFIZ
+
+            // $uploadRes = $this->uploadImage($uploadUrl, $imagePath);
+            if($uploadRes == 200){
+                return 200;
+            }else{
+                return 400;
+            }
+            
+        }else{
+            return 400;
+        }
+        
+
+
+
+    }
+
+    public function registerImage(){
+
+        try {
+
+            $user_id = Auth::id();
+            $Token = User::where('id', $user_id)->value('linkedin_token');
+            $linkedin_id = User::where('id', $user_id)->value('linkedin_id');
+    
+            if (!$Token || !$linkedin_id) {
+
+                //Token or ID missing
+                return response()->json([
+                    'status' => 404,
+                    'message' => 'Token or PersonID is missing',
+                ]);
+
+            }
+    
+            $url = "https://api.linkedin.com/v2/assets?action=registerUpload";
+            $body = [
+                "registerUploadRequest" => [
+                    "recipes" => ["urn:li:digitalmediaRecipe:feedshare-image"],
+                    "owner" => "urn:li:person:" . $linkedin_id,
+                    "serviceRelationships" => [
+                        [
+                            "relationshipType" => "OWNER",
+                            "identifier" => "urn:li:userGeneratedContent"
+                        ]
+                    ]
+                ]
+            ];
+
+            $response = Http::withHeaders([
+                'Authorization' => 'Bearer ' . $Token,
+                'Content-Type' => 'application/json'
+            ])->post($url, $body);
+    
+            if ($response->successful()) {
+
+                $data = $response->json();
+    
+                $uploadUrl = $data['value']['uploadMechanism']['com.linkedin.digitalmedia.uploading.MediaUploadHttpRequest']['uploadUrl'] ?? null;
+                $asset = $data['value']['asset'] ?? null;
+    
+                return response()->json([
+                    'status' => 200,
+                    'message' => 'Upload URL retrieved successfully',
+                    'uploadUrl' => $uploadUrl,
+                    'asset' => $asset
+                ]);
+
+            } else {
+
+                return response()->json([
+                    'status' => 401,
+                    'message' => 'Request Failed',
+                    'error' => $response->body()
+                ], $response->status());
+
+            }
+        } catch (\Exception $e) {
+
+            return response()->json([
+                'status' => 500,
+                'message' => 'Something went wrong',
+                'error' => $e->getMessage()
+            ], 500);
+
+        }
+    }
+
+
+    // public function uploadImage($uploadUrl, $image){
+    //     $imagePath = public_path('uploads/products/image.jpg'); // Make sure this points to the correct file
+
+
+    //     // Getting user token
+    //     $user_id = auth()->user()->id;
+    //     $Token = User::where('id', $user_id)->value('linkedin_token');
+
+    //     if (!$Token) {
+    //         return 401; //401
+    //     }
+    
+    //     // Debugging: Check if image exists
+    //     // if (!file_exists($image)) {
+    //     //     return 400; //400
+    //     // }
+
+
+
+    //     // Prepare API request payload
+    //     $payload = [
+    //         'ca' => 'vector_feedshare',
+    //         'cn' => 'uploads',
+    //         'iri' => 'B01-77',
+    //         'sync' => 0,
+    //         'v' => 'beta',
+    //         'ut' => '3WGuyOLxEqDXE1',
+    //         'image' => fopen($image, 'r') // Open file for upload
+    //     ];
+
+    //     try {
+    //         // Hit the API with Bearer Token
+    //         $response = Http::withHeaders([
+    //             'Authorization' => 'Bearer ' . $Token, // Use custom header
+    //             'Accept' => 'application/json'
+    //         ])->attach(
+    //             'image', fopen($imagePath, 'r'), basename($image)
+    //         )->post($uploadUrl, $payload);
+
+
+    //         // Check response status
+    //         if ($response->successful()) {
+    //             return 200;
+    //         } elseif ($response->clientError()) {
+    //             return 400; // Bad request
+    //         } elseif ($response->serverError()) {
+    //             return 500; // Server error
+    //         }else{
+    //             return 400;
+    //         }
+    //     } catch (\Exception $e) {
+    //         return 500; // Exception fallback
+    //     }
+    // }
+
+
 }
