@@ -186,6 +186,16 @@
     </style>
 
 
+    {{-- LOADING SPINNER --}}
+    <div id="loading-spinner"
+        style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 9999; display: flex; align-items: center; justify-content: center;">
+        <div style=" padding: 20px; border-radius: 10px;">
+            <img src="{{ asset('images/loading.gif') }}" alt="Loading..." width="50">
+        </div>
+    </div>
+
+
+
     <div class="row">
         <div class="welcome-home">
             <h1>Products</h1>
@@ -236,6 +246,7 @@
 
     <script>
         $(document).ready(function() {
+            $('#loading-spinner').hide(); // Ensure it's hidden on page load
             // Initialize DataTable
             $('#products-table').DataTable({
                 serverSide: true,
@@ -347,6 +358,8 @@
             $(document).on('click', '.postOnLinkedin', function(e) {
                 e.preventDefault();
 
+                $('#loading-spinner').show(); // Show loading animation
+
                 var productId = $(this).data('id');
 
                 // Get the row data using the DataTable instance
@@ -358,7 +371,8 @@
 
                 // Get the image path from the row (if exists)
                 var imageElement = $(this).closest('tr').find('td img'); // Find image in the row
-                var imageSrc = imageElement.length > 0 ? imageElement.attr('src') : null; // Get src if exists
+                var imageSrc = imageElement.length > 0 ? imageElement.attr('src') :
+                null; // Get src if exists
 
                 if (imageSrc) {
                     var baseUrl = "{{ asset('') }}"; // Laravel base URL
@@ -383,6 +397,7 @@
                     type: 'POST',
                     data: requestData,
                     success: function(response) {
+                        $('#loading-spinner').hide(); // Hide loading animation
                         if (response.status == 'success') {
                             swal({
                                 title: "Success!",
@@ -401,6 +416,7 @@
                         }
                     },
                     error: function(xhr, status, error) {
+                        $('#loading-spinner').hide(); // Hide loading animation
                         swal({
                             title: "Failed!",
                             // text: error,
