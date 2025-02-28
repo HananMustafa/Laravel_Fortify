@@ -266,11 +266,16 @@ class linkedin extends Controller
             $asset = $decodedRegisterRes['asset']; //Its image id
 
             $uploadRes = $this->uploadImage($uploadUrl, $image);
+
+            //DEBUGGING
+            //return $uploadRes;
+
             if ($uploadRes == 200) {
 
-
-
                 $getStatusRes = $this->getImageStatus($asset);
+
+                //DEBUGGING
+                //return 'STATUS OF IMAGE::' . $getStatusRes;
 
                 if ($getStatusRes == 200) {
 
@@ -395,15 +400,24 @@ class linkedin extends Controller
         if (!$token) {
             return 401;
         }
+        
 
-        // Send the image as binary data using PUT request
+
+        try{
         $response = Http::withHeaders([
             'Authorization' => 'Bearer ' . $token,
-            'Content-Type' => 'application/octet-stream', // Set content type as raw binary
-        ])->attach('file', fopen($imagePath, 'r'))
-            ->put($uploadUrl);
+        ])->withOptions(['verify' => false]) 
+        ->withBody(fopen($imagePath, 'r') ,'application/octet-stream')
+        ->put($uploadUrl);
 
-        return $response->successful() ? 200 : $response->status();
+        return $response->successful() ? 200 : 'something went wrong';
+
+        }catch (\Exception $e) {
+            return 'EXCEPTION CATCHED'. $e->getMessage();
+        }
+
+        
+        
     }
 
 
@@ -482,20 +496,47 @@ class linkedin extends Controller
         // API URL
         $url = "https://api.linkedin.com/v2/assets/{$imageID}";
 
-        $response = Http::withHeaders([
-            'Authorization' => 'Bearer ' . $token,
-        ])->get($url);
+        $flag = true;
+        while($flag){
 
-        if ($response->successful()) {
+            $response = Http::withHeaders([
+                'Authorization' => 'Bearer ' . $token,
+            ])->get($url);
+
+            if ($response->successful()) {
             $data = $response->json();
 
-            // Check if 'recipes' key exists
+            //Check if 'recipes' key exists
             if (isset($data['recipes'][0]['status']) && $data['recipes'][0]['status'] === 'AVAILABLE') {
+                $flag = false;
+                //DEBUGGING
+                // return $response->body();
+
                 return 200;
+            }else{
+                return 'NOT AVAILABLE';
             }
         }
 
-        return $response->status();
+
+        }
+        
+        
+
+        // if ($response->successful()) {
+        //     $data = $response->json();
+
+        //     //DEBUGGGGGGGGGGGGGGGGINGGGGGGGGGGGGGGGGGGGGGGG
+        //     // return $data['recipes'][0]['status'];
+        //     return $response->body();
+
+        //     // Check if 'recipes' key exists
+        //     // if (isset($data['recipes'][0]['status']) && $data['recipes'][0]['status'] === 'AVAILABLE') {
+        //     //     return 200;
+        //     // }
+        // }
+
+        // return $response->status();
     }
 
 
