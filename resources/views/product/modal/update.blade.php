@@ -11,15 +11,23 @@
                 <form id="updateProductForm" method="POST" enctype="multipart/form-data">
                     @csrf
 
-                    <div class="Section-Form">
-                        <input type="text" name="title" required class="form-field animation a3"
-                            placeholder="Title">
-                        <input type="text" id="description" name="description" required
-                            class="form-field animation a3" placeholder="Description">
-                        <div class="mb-3">
-                            <label>Upload File/Image</label>
-                            <input type="file" name="image" class="form-control" />
+                    <div class="mx-5">
+
+                        <div class="center-70">
+                            <input type="text" name="title" required class="form-field animation a3"
+                                placeholder="Title">
+                            <input type="text" id="description" name="description" required
+                                class="form-field animation a3" placeholder="Description">
                         </div>
+
+
+                        <div class="mt-3">
+                            <input type="file" name="image" />
+                        </div>
+
+                    </div>
+
+                    <div class="Section-Form">
                         <button type="submit" class="button">Update Product</button>
                     </div>
 

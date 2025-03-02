@@ -148,10 +148,10 @@ class linkedin extends Controller
 
 
         //DEBUGGING
-        return response()->json([
-            'status' => 'success',
-            'message' => $Response
-        ]);
+        // return response()->json([
+        //     'status' => 'success',
+        //     'message' => $Response
+        // ]);
 
 
 
@@ -282,7 +282,7 @@ class linkedin extends Controller
                     $postImgRes = $this->postImage($asset, $title, $description);
 
                     //DEBUGGING
-                    return $postImgRes;
+                    // return $postImgRes;
 
                     if ($postImgRes == 200) {
                         return 200;
@@ -470,10 +470,10 @@ class linkedin extends Controller
 
         // return $response->successful() ? 200 : $response->status();
         $data = $response->json();
-        //return $response->successful() && isset($data['id']) ? 200 : $response->status();
+        return $response->successful() && isset($data['id']) ? 200 : $response->status();
 
         //DEBUGGING
-        return $response->successful() && isset($data['id']) ? $data['id'] : $response->status();
+        // return $response->successful() && isset($data['id']) ? $data['id'] : $response->status();
 
     }
 

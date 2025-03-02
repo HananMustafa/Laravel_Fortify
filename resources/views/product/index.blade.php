@@ -209,7 +209,7 @@
                             <th>ID</th>
                             <th>Title</th>
                             <th>Description</th>
-                            <th>File</th>
+                            <th>Media</th>
                             <th>Action</th>
                         </tr>
                     </thead>
