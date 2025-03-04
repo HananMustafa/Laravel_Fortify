@@ -372,7 +372,7 @@
                 // Get the image path from the row (if exists)
                 var imageElement = $(this).closest('tr').find('td img'); // Find image in the row
                 var imageSrc = imageElement.length > 0 ? imageElement.attr('src') :
-                null; // Get src if exists
+                    null; // Get src if exists
 
                 if (imageSrc) {
                     var baseUrl = "{{ asset('') }}"; // Laravel base URL
