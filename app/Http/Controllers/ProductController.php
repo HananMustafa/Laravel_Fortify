@@ -23,25 +23,37 @@ class ProductController extends Controller
         $request->validate([
             'title' => 'required',
             'description' => 'required',
-            'image' => 'nullable|mimes:png,jpg,jpeg,webp'
+            'image' => 'nullable|mimes:png,jpg,jpeg,webp',
+            'video' => 'nullable|mimes:mp4,avi,mov|max:102400' //max 100MB
         ]);
 
-        $path=null;
-        $filename=null;
-        if($request->has('image')){
+        $imagePath=null;
+        $videoPath=null;
+        $imageFilename=null;
+        $videoFilename=null;
 
+        if($request->has('image')){
             $file = $request->file('image');
             $extension = $file->getClientOriginalExtension();
-            $filename = time().'.'.$extension;
-            $path = 'uploads/products/';
-            $file->move($path,$filename);
+            $imageFilename = time().'.'.$extension;
+            $imagePath = 'uploads/products/';
+            $file->move($imagePath,$imageFilename);
+        }
+
+        if($request->hasFile('video')){
+            $file = $request->file('video');
+            $extension = $file->getClientOriginalExtension();
+            $videoFilename = time().'.'.$extension;
+            $videoPath = 'uploads/products/videos/';
+            $file->move($videoPath,$videoFilename);
         }
 
         Product::create([
             'user_id' => Auth::id(),
             'title' => $request->title,
             'description' => $request->description,
-            'image' => $path.$filename
+            'image' => $imagePath.$imageFilename,
+            'video' => $videoPath.$videoFilename
         ]);
 
         return redirect()->route('product')->with('success', 'Product added successfully.');
