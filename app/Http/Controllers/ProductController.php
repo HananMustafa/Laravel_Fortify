@@ -9,7 +9,8 @@ use Illuminate\Support\Facades\File;
 
 class ProductController extends Controller
 {
-    public function index(){
+    public function index()
+    {
         return view('product.index');
     }
 
@@ -27,33 +28,33 @@ class ProductController extends Controller
             'video' => 'nullable|mimes:mp4,avi,mov|max:102400' //max 100MB
         ]);
 
-        $imagePath=null;
-        $videoPath=null;
-        $imageFilename=null;
-        $videoFilename=null;
+        $imagePath = null;
+        $videoPath = null;
+        $imageFilename = null;
+        $videoFilename = null;
 
-        if($request->has('image')){
+        if ($request->has('image')) {
             $file = $request->file('image');
             $extension = $file->getClientOriginalExtension();
-            $imageFilename = time().'.'.$extension;
+            $imageFilename = time() . '.' . $extension;
             $imagePath = 'uploads/products/';
-            $file->move($imagePath,$imageFilename);
+            $file->move($imagePath, $imageFilename);
         }
 
-        if($request->hasFile('video')){
+        if ($request->hasFile('video')) {
             $file = $request->file('video');
             $extension = $file->getClientOriginalExtension();
-            $videoFilename = time().'.'.$extension;
+            $videoFilename = time() . '.' . $extension;
             $videoPath = 'uploads/products/videos/';
-            $file->move($videoPath,$videoFilename);
+            $file->move($videoPath, $videoFilename);
         }
 
         Product::create([
             'user_id' => Auth::id(),
             'title' => $request->title,
             'description' => $request->description,
-            'image' => $imagePath.$imageFilename,
-            'video' => $videoPath.$videoFilename
+            'image' => $imagePath . $imageFilename,
+            'video' => $videoPath . $videoFilename
         ]);
 
         return redirect()->route('product')->with('success', 'Product added successfully.');
@@ -62,7 +63,7 @@ class ProductController extends Controller
     public function edit($id)
     {
         $product = Product::findOrFail($id);
-        
+
         // return view('product.update', compact('product'));
         return response()->json(['product' => $product]);
     }
@@ -79,34 +80,34 @@ class ProductController extends Controller
 
         $product = Product::findOrFail($id);
 
-        $imagePath=null;
-        $videoPath=null;
-        $imageFilename=null;
-        $videoFilename=null;
+        $imagePath = null;
+        $videoPath = null;
+        $imageFilename = null;
+        $videoFilename = null;
 
-        if($request->has('image')){
+        if ($request->has('image')) {
 
             $file = $request->file('image');
             $extension = $file->getClientOriginalExtension();
-            $imageFilename = time().'.'.$extension;
+            $imageFilename = time() . '.' . $extension;
             $imagePath = 'uploads/products/';
-            $file->move($imagePath,$imageFilename);
+            $file->move($imagePath, $imageFilename);
 
-            if(File::exists($product->image)){
+            if (File::exists($product->image)) {
                 File::delete($product->image);
             }
         }
 
 
-        
-        if($request->hasFile('video')){
+
+        if ($request->hasFile('video')) {
             $file = $request->file('video');
             $extension = $file->getClientOriginalExtension();
-            $videoFilename = time().'.'.$extension;
+            $videoFilename = time() . '.' . $extension;
             $videoPath = 'uploads/products/videos/';
-            $file->move($videoPath,$videoFilename);
+            $file->move($videoPath, $videoFilename);
 
-            if(File::exists($product->video)){
+            if (File::exists($product->video)) {
                 File::delete($product->video);
             }
         }
@@ -128,10 +129,10 @@ class ProductController extends Controller
     {
         $product = Product::findOrFail($id);
 
-        if(File::exists($product->image)){
+        if (File::exists($product->image)) {
             File::delete($product->image);
         }
-        
+
         $product->delete();
 
         return response()->json(['success' => 'Product deleted successfully']);
@@ -143,8 +144,8 @@ class ProductController extends Controller
         return DataTables::of($products)
             ->addColumn('action', function ($product) {
                 return '
-                    <a href="'.route('product.edit', $product->id).'" class="btn btn-sm btn-primary">Update</a>
-                    <button type="button" class="btn btn-sm btn-danger delete-product" data-id="'.$product->id.'">Delete</button>';
+                    <a href="' . route('product.edit', $product->id) . '" class="btn btn-sm btn-primary">Update</a>
+                    <button type="button" class="btn btn-sm btn-danger delete-product" data-id="' . $product->id . '">Delete</button>';
             })
             ->rawColumns(['action'])
             ->make(true);
