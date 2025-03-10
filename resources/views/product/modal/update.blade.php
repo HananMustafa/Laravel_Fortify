@@ -22,7 +22,7 @@
 
 
                         <div class="mt-3">
-                            <input type="file" name="image" />
+                            <input type="file" name="video" /> {{--Video can be uploaded --}}
                         </div>
 
                     </div>

@@ -73,28 +73,51 @@ class ProductController extends Controller
         $request->validate([
             'title' => 'required',
             'description' => 'required',
-            'image' => 'nullable|mimes:png,jpg,jpeg,webp'
+            'image' => 'nullable|mimes:png,jpg,jpeg,webp',
+            'video' => 'nullable|mimes:mp4,avi,mov|max:102400' //max 100MB
         ]);
 
         $product = Product::findOrFail($id);
+
+        $imagePath=null;
+        $videoPath=null;
+        $imageFilename=null;
+        $videoFilename=null;
 
         if($request->has('image')){
 
             $file = $request->file('image');
             $extension = $file->getClientOriginalExtension();
-            $filename = time().'.'.$extension;
-            $path = 'uploads/products/';
-            $file->move($path,$filename);
+            $imageFilename = time().'.'.$extension;
+            $imagePath = 'uploads/products/';
+            $file->move($imagePath,$imageFilename);
 
             if(File::exists($product->image)){
                 File::delete($product->image);
             }
         }
 
+
+        
+        if($request->hasFile('video')){
+            $file = $request->file('video');
+            $extension = $file->getClientOriginalExtension();
+            $videoFilename = time().'.'.$extension;
+            $videoPath = 'uploads/products/videos/';
+            $file->move($videoPath,$videoFilename);
+
+            if(File::exists($product->video)){
+                File::delete($product->video);
+            }
+        }
+
+
+
         $product->update([
             'title' => $request->input('title'),
             'description' => $request->input('description'),
-            'image' => $path . $filename
+            'image' => $imagePath . $imageFilename,
+            'video' => $videoPath . $videoFilename
         ]);
 
 
