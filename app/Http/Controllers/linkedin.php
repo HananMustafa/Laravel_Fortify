@@ -142,7 +142,14 @@ class linkedin extends Controller
 
         if ($request->has('image')) {
             $Response = $this->imagePost($request->image, $title, $description);
-        } else {
+        }
+        else if($request->has('video')){
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Video detected!'
+            ]);
+        }
+        else {
             $Response = $this->textPost($title, $description);
         }
 

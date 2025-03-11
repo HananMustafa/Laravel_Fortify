@@ -297,7 +297,7 @@
 
                                 // Generate a video thumbnail using the poster attribute
                                 videoHtml = `
-                                    <video width="70" height="50" controls poster="${baseUrl}/thumbnails/${row.video_thumbnail}">
+                                    <video width="70" height="50" autoplay muted loop poster="${baseUrl}/thumbnails/${row.video_thumbnail}">
                                         <source src="${videoPath}" type="video/mp4">
                                         Your browser does not support the video tag.
                                     </video>
