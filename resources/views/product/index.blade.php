@@ -395,16 +395,22 @@
 
                 var title = rowData.title;
                 var description = rowData.description;
+                var imagePath = rowData.image;
+                var videoPath = rowData.video;
+
+                var baseUrl = "{{ asset('')}}";
+
+
 
                 // Get the image path from the row (if exists)
-                var imageElement = $(this).closest('tr').find('td img'); // Find image in the row
-                var imageSrc = imageElement.length > 0 ? imageElement.attr('src') :
-                    null; // Get src if exists
+                // var imageElement = $(this).closest('tr').find('td img'); // Find image in the row
+                // var imageSrc = imageElement.length > 0 ? imageElement.attr('src') :
+                //     null; // Get src if exists
 
-                if (imageSrc) {
-                    var baseUrl = "{{ asset('') }}"; // Laravel base URL
-                    imageSrc = imageSrc.replace(baseUrl, ''); // Remove base URL to get relative path
-                }
+                // if (imageSrc) {
+                //     var baseUrl = "{{ asset('') }}"; // Laravel base URL
+                //     imageSrc = imageSrc.replace(baseUrl, ''); // Remove base URL to get relative path
+                // }
 
                 // Create data object
                 var requestData = {
@@ -415,8 +421,15 @@
                 };
 
                 // Add image only if it exists
-                if (imageSrc) {
-                    requestData.image = imageSrc;
+                // if (imageSrc) {
+                //     requestData.image = imageSrc;
+                // }
+
+
+                if(imagePath){
+                    requestData.image = baseUrl + imagePath;
+                }else if (videoPath){
+                    requestData.video = baseUrl + videoPath;
                 }
 
                 $.ajax({

@@ -138,16 +138,13 @@ class linkedin extends Controller
 
         $title = $request->input('title');
         $description = $request->input('description');
-
+        
 
         if ($request->has('image')) {
             $Response = $this->imagePost($request->image, $title, $description);
         }
         else if($request->has('video')){
-            return response()->json([
-                'status' => 'success',
-                'message' => 'Video detected!'
-            ]);
+            $Response = $this->videoPost();
         }
         else {
             $Response = $this->textPost($title, $description);
@@ -200,6 +197,18 @@ class linkedin extends Controller
 
 
     }
+
+
+
+
+    public function videoPost(){
+
+        return 404;
+    }
+
+
+
+
 
 
 
