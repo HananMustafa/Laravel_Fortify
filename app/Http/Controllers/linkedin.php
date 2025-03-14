@@ -137,15 +137,13 @@ class linkedin extends Controller
     {
         $title = $request->input('title');
         $description = $request->input('description');
-        
+
 
         if ($request->has('image')) {
             $Response = $this->imagePost($request->image, $title, $description);
-        }
-        else if($request->has('video')){
+        } else if ($request->has('video')) {
             $Response = $this->videoPost($request->video, $title, $description);
-        }
-        else {
+        } else {
             $Response = $this->textPost($title, $description);
         }
 
@@ -200,20 +198,21 @@ class linkedin extends Controller
 
 
 
-    public function videoPost($video, $title, $description){
+    public function videoPost($video, $title, $description)
+    {
 
-        $Response = $this->initializeVideo();
-        if($Response == 200){
-            return 200;
-        }else{
-            return $Response;
-        }
-
-}
+        $uploadUrl = $this->initializeVideo();
+        $uploadRes = $this->uploadVideo($uploadUrl, $video);
 
 
-    public function initializeVideo(){
-        return 200;
+
+        
+
+    }
+
+
+    public function initializeVideo()
+    {
 
         //Fetching user_id from users table
         $user_id = auth()->user()->id;
@@ -229,35 +228,37 @@ class linkedin extends Controller
                 "uploadCaptions" => false,
                 "uploadThumbnail" => false,
             ]
-            ];
+        ];
 
-        try{
-        $response = Http::withHeaders([
-            'Content-Type' => 'application/json',
-            'Linkedin-Version' => '202502',
-            'X-Restli-Protocol-Version' => '2.0.0'
-        ])->withToken($Token)
-            ->post($url, $body);
+        try {
+            $response = Http::withHeaders([
+                'Content-Type' => 'application/json',
+                'LinkedIn-Version' => '202502',
+                'X-Restli-Protocol-Version' => '2.0.0'
+            ])->withToken($Token)
+                ->post($url, $body);
 
-        }catch(\Exception $e){
+        } catch (\Exception $e) {
             return $e;
         }
-        
-        if($response->successful()){
-            return 200;
-            // return response()->json([
-            //     'status' => 'success',
-            //     'message'=> 'Video Initialized'
-            // ]);
-        }else{
+
+        // DEBUGGING
+        //return $response->body();
+
+        $data = $response->json();
+        if (isset($data['value']['uploadInstructions'][0]['uploadUrl'])) {
+            return $data['value']['uploadInstructions'][0]['uploadUrl'];
+
+        } else {
             return $response->body();
-            // return response()->json([
-            //     'status'=> 'error',
-            //     'message'=> $response->json()
-            // ]);
         }
 
-        
+
+    }
+
+
+    public function uploadVideo($uploadUrl, $video){
+        return 200;
     }
 
 
@@ -470,24 +471,24 @@ class linkedin extends Controller
         if (!$token) {
             return 401;
         }
-        
 
 
-        try{
-        $response = Http::withHeaders([
-            'Authorization' => 'Bearer ' . $token,
-        ])->withOptions(['verify' => false]) 
-        ->withBody(fopen($imagePath, 'r') ,'application/octet-stream')
-        ->put($uploadUrl);
 
-        return $response->successful() ? 200 : 'something went wrong';
+        try {
+            $response = Http::withHeaders([
+                'Authorization' => 'Bearer ' . $token,
+            ])->withOptions(['verify' => false])
+                ->withBody(fopen($imagePath, 'r'), 'application/octet-stream')
+                ->put($uploadUrl);
 
-        }catch (\Exception $e) {
-            return 'EXCEPTION CATCHED'. $e->getMessage();
+            return $response->successful() ? 200 : 'something went wrong';
+
+        } catch (\Exception $e) {
+            return 'EXCEPTION CATCHED' . $e->getMessage();
         }
 
-        
-        
+
+
     }
 
 
@@ -567,31 +568,31 @@ class linkedin extends Controller
         $url = "https://api.linkedin.com/v2/assets/{$imageID}";
 
         $flag = true;
-        while($flag){
+        while ($flag) {
 
             $response = Http::withHeaders([
                 'Authorization' => 'Bearer ' . $token,
             ])->get($url);
 
             if ($response->successful()) {
-            $data = $response->json();
+                $data = $response->json();
 
-            //Check if 'recipes' key exists
-            if (isset($data['recipes'][0]['status']) && $data['recipes'][0]['status'] === 'AVAILABLE') {
-                $flag = false;
-                //DEBUGGING
-                // return $response->body();
+                //Check if 'recipes' key exists
+                if (isset($data['recipes'][0]['status']) && $data['recipes'][0]['status'] === 'AVAILABLE') {
+                    $flag = false;
+                    //DEBUGGING
+                    // return $response->body();
 
-                return 200;
-            }else{
-                return 'NOT AVAILABLE';
+                    return 200;
+                } else {
+                    return 'NOT AVAILABLE';
+                }
             }
-        }
 
 
         }
-        
-        
+
+
 
         // if ($response->successful()) {
         //     $data = $response->json();
