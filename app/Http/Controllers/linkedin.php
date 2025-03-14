@@ -135,7 +135,6 @@ class linkedin extends Controller
 
     public function postOnLinkedin(Request $request)
     {
-
         $title = $request->input('title');
         $description = $request->input('description');
         
@@ -144,18 +143,18 @@ class linkedin extends Controller
             $Response = $this->imagePost($request->image, $title, $description);
         }
         else if($request->has('video')){
-            $Response = $this->videoPost();
+            $Response = $this->videoPost($request->video, $title, $description);
         }
         else {
             $Response = $this->textPost($title, $description);
         }
 
 
-        //DEBUGGING
-        // return response()->json([
-        //     'status' => 'success',
-        //     'message' => $Response
-        // ]);
+        // DEBUGGING
+        return response()->json([
+            'status' => 'success',
+            'message' => $Response
+        ]);
 
 
 
@@ -201,9 +200,64 @@ class linkedin extends Controller
 
 
 
-    public function videoPost(){
+    public function videoPost($video, $title, $description){
 
-        return 404;
+        $Response = $this->initializeVideo();
+        if($Response == 200){
+            return 200;
+        }else{
+            return $Response;
+        }
+
+}
+
+
+    public function initializeVideo(){
+        return 200;
+
+        //Fetching user_id from users table
+        $user_id = auth()->user()->id;
+        $Token = User::where('id', $user_id)->value('linkedin_token');
+        $linkedin_id = User::where('id', $user_id)->value('linkedin_id');
+
+        $url = 'https://api.linkedin.com/rest/videos?action=initializeUpload';
+
+        $body = [
+            "initializeUploadRequest" => [
+                "owner" => "urn:li:person:" . $linkedin_id,
+                "fileSizeBytes" => 1055736,
+                "uploadCaptions" => false,
+                "uploadThumbnail" => false,
+            ]
+            ];
+
+        try{
+        $response = Http::withHeaders([
+            'Content-Type' => 'application/json',
+            'Linkedin-Version' => '202502',
+            'X-Restli-Protocol-Version' => '2.0.0'
+        ])->withToken($Token)
+            ->post($url, $body);
+
+        }catch(\Exception $e){
+            return $e;
+        }
+        
+        if($response->successful()){
+            return 200;
+            // return response()->json([
+            //     'status' => 'success',
+            //     'message'=> 'Video Initialized'
+            // ]);
+        }else{
+            return $response->body();
+            // return response()->json([
+            //     'status'=> 'error',
+            //     'message'=> $response->json()
+            // ]);
+        }
+
+        
     }
 
 
