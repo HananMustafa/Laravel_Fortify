@@ -204,7 +204,11 @@ class linkedin extends Controller
         $uploadUrl = $this->initializeVideo();
         $uploadRes = $this->uploadVideo($uploadUrl, $video);
 
-        return 200;
+        if($uploadRes == 200){
+            return 'Video Uploaded';
+        }else{
+            return $uploadRes;
+        }
 
 
 
@@ -259,8 +263,32 @@ class linkedin extends Controller
     }
 
 
-    public function uploadVideo($uploadUrl, $video){
-        return 200;
+    public function uploadVideo($endpoint, $video){
+        $video = public_path(str_replace(url('/'), '', $video));
+
+        //Fetching user_id from users table
+        $user_id = auth()->user()->id;
+        $Token = User::where('id', $user_id)->value('linkedin_token');
+
+        if(!file_exists($video)){
+            return $video;
+        }
+
+        $videoStream = fopen($video,'r');
+
+        $response = Http::withHeaders([
+            'Authorization' => 'Bearer $Token',
+            'Content-Type' => 'application/octet-stream'
+        ])->withBody(stream_get_contents($videoStream), 'application/octet-stream')
+        ->post($endpoint);
+
+        fclose($videoStream);
+
+        if($response->successful()){
+            return 200;
+        }else{
+            return $response->body();
+        }
     }
 
 
