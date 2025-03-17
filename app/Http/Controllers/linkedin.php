@@ -224,10 +224,18 @@ class linkedin extends Controller
 
                 $finalizeRes = $this->finalizeUpload($videoID, $etag);
                 if($finalizeRes == 200){
-                    return 'video finalized!';
+                    $postVideoRes = $this->postVideo($videoID);
+
+                    if($postVideoRes == 200){
+                        return 'VIDEO POSTED SUCCESSFULLY!';
+                    }else{
+                        return $postVideoRes;
+                    }
                 }else{
                     return $finalizeRes;
                 }
+
+                
 
             }else{
                 return $decodedUpload['message'];
@@ -423,6 +431,60 @@ class linkedin extends Controller
     }
 
 
+    public function postVideo($videoID){
+        $user_id = auth()->user()->id;
+        $Token = User::where('id', $user_id)->value('linkedin_token');
+        $pid = User::where('id', $user_id)->value('linkedin_id');
+
+        if (!$Token) {
+            return 'Token not found';
+        }
+        $videoID = str_replace('urn:li:video:' ,'', $videoID);
+
+        $url = 'https://api.linkedin.com/v2/ugcPosts';
+
+        $body = [
+            'author' => 'urn:li:person:' . $pid,
+            'lifecycleState' => 'PUBLISHED',
+            'specificContent' =>[
+                'com.linkedin.ugc.ShareContent' => [
+                    'shareCommentary' => [
+                        'text' => 'Check out this video!'
+                    ],
+                    'shareMediaCategory' => 'VIDEO',
+                    'media' => [
+                        [
+                        'status' => 'READY',
+                        'description' => [
+                            'text' => 'Video description'
+                        ],
+                        'media' => 'urn:li:digitalmediaAsset:' . $videoID,
+                        'title' => [
+                            'text' => 'Testing'
+                        ],
+                        ]
+                    ],
+                ],
+            ],
+            'visibility' => [
+                'com.linkedin.ugc.MemberNetworkVisibility' => 'PUBLIC'
+            ]
+        ];
+
+        $response = Http::withHeaders([
+            'Authorization' =>'Bearer ' . $Token,
+            'Content-Type' => 'application/json',
+            'LinkedIn-Version' => '202502',
+            'X-Restli-Protocol-Version' => '2.0.0'
+        ])->post($url, $body);
+
+        if ($response->successful()){
+            return 200;
+        }else{
+            return $response->body();
+        }
+
+    }
 
 
 
