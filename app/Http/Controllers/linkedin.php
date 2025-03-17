@@ -218,8 +218,16 @@ class linkedin extends Controller
             if($decodedUpload['status'] == 'success'){
 
                 //Checking the shit if available
-                $statusRes = $this->getVideoStatus($videoID);
-                return $statusRes;
+                // $statusRes = $this->getVideoStatus($videoID);
+                // return $statusRes;
+                sleep(10);
+
+                $finalizeRes = $this->finalizeUpload($videoID, $etag);
+                if($finalizeRes == 200){
+                    return 'video finalized!';
+                }else{
+                    return $finalizeRes;
+                }
 
             }else{
                 return $decodedUpload['message'];
@@ -378,6 +386,40 @@ class linkedin extends Controller
         }
 
     }
+    }
+
+
+
+    public function finalizeUpload($videoID, $etag){
+        $user_id = auth()->user()->id;
+        $Token = User::where('id', $user_id)->value('linkedin_token');
+
+        if (!$Token) { 
+            return 'Invalid Token';
+        }
+
+        $videoID = str_replace('urn:li:video:' ,'', $videoID);
+        $url = 'https://api.linkedin.com/rest/videos?action=finalizeUpload';
+
+        $body = [
+            'finalizeUploadRequest' => [
+            'video' => 'urn:li:video:' . $videoID,
+            'uploadToken' => '',
+            'uploadedPartIds' => [$etag]
+            ]
+        ];
+
+        $response = Http::withHeaders([
+            'Authorization' => 'Bearer ' . $Token,
+            'LinkedIn-Version' => '202502',
+            'X-Restli-Protocol-Version' => '2.0.0'
+        ])->post($url, $body);
+
+        if($response->successful()){
+            return 200;
+        }else{
+            return $response->body();
+        }
     }
 
 
