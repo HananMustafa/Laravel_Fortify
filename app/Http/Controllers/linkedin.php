@@ -201,14 +201,39 @@ class linkedin extends Controller
     public function videoPost($video, $title, $description)
     {
 
-        $uploadUrl = $this->initializeVideo();
-        $uploadRes = $this->uploadVideo($uploadUrl, $video);
+        // API CALL: Initialize Video
+        $initializeRes = $this->initializeVideo();
+        $decodedData = $initializeRes->getData(true);
 
-        if($uploadRes == 200){
-            return 'Video Uploaded';
+        if($decodedData['status'] == 'success'){
+
+            $uploadUrl = $decodedData['url'];
+            $videoID = $decodedData['videoID'];
+
+            // API CALL: Upload Video
+            $uploadRes = $this->uploadVideo($uploadUrl, $video);
+            $decodedUpload = $uploadRes->getData(true);
+            $etag = $decodedUpload['Etag'];
+
+            if($decodedUpload['status'] == 'success'){
+
+                //Checking the shit if available
+                $statusRes = $this->getVideoStatus($videoID);
+                return $statusRes;
+
+            }else{
+                return $decodedUpload['message'];
+            }
+
+            
+
         }else{
-            return $uploadRes;
+            return $decodedData['message'];
         }
+
+
+
+        
 
 
 
@@ -245,7 +270,10 @@ class linkedin extends Controller
                 ->post($url, $body);
 
         } catch (\Exception $e) {
-            return $e;
+            return response()->json([
+                'status' => 'error',
+                'message' => $e->getMessage()
+            ]);
         }
 
         // DEBUGGING
@@ -253,10 +281,18 @@ class linkedin extends Controller
 
         $data = $response->json();
         if (isset($data['value']['uploadInstructions'][0]['uploadUrl'])) {
-            return $data['value']['uploadInstructions'][0]['uploadUrl'];
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Video Initialized!',
+                'url' => $data['value']['uploadInstructions'][0]['uploadUrl'],
+                'videoID' => $data['value']['video'],
+            ]);
 
         } else {
-            return $response->body();
+            return response()->json([
+                'status' => 'error',
+                'message' => $response->body()
+            ]);
         }
 
 
@@ -277,7 +313,7 @@ class linkedin extends Controller
         $videoStream = fopen($video,'r');
 
         $response = Http::withHeaders([
-            'Authorization' => 'Bearer $Token',
+            'Authorization' => 'Bearer ' . $Token,
             'Content-Type' => 'application/octet-stream'
         ])->withBody(stream_get_contents($videoStream), 'application/octet-stream')
         ->post($endpoint);
@@ -285,10 +321,63 @@ class linkedin extends Controller
         fclose($videoStream);
 
         if($response->successful()){
-            return 200;
+            // return 200;
+            $etag = $response->header('Etag');
+            return response()->json([
+                'status' => 'success',
+                'message'=> '200',
+                'Etag' => $etag
+            ]);
         }else{
-            return $response->body();
+            return response()->json([
+                'status' => 'failed',
+                'message'=> $response->body()
+            ]);
         }
+    }
+
+
+    public function getVideoStatus($videoID){
+        //Fetching user_id from users table
+        $user_id = auth()->user()->id;
+        $Token = User::where('id', $user_id)->value('linkedin_token');
+        if (!$Token) {
+            return 401;
+        }
+
+        $videoID = str_replace('urn:li:video:' ,'', $videoID);
+        $url = "https://api.linkedin.com/rest/assets/{$videoID}";
+
+        $flag = true;
+        while($flag){
+
+        $response = Http::withHeaders([
+            'Authorization' => 'Bearer ' . $Token,
+            'LinkedIn-Version' => '202502'
+        ])->get($url);
+
+        $flag = false;
+        return $response->body();
+
+
+
+           
+
+
+
+
+
+
+
+        $data = $response->json();
+        if(isset($data['recipes'][0]['status']) && $data['recipes'][0]['status'] === 'WAITING_UPLOAD'){
+            $flag = false;
+            return 'WAITING_UPLOAD';
+        }else{
+            return 'Loop laga le bhai';
+        }
+
+    }
     }
 
 
