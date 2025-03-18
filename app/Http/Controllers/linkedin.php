@@ -220,14 +220,14 @@ class linkedin extends Controller
                 //Checking the shit if available
                 // $statusRes = $this->getVideoStatus($videoID);
                 // return $statusRes;
-                sleep(10);
+                sleep(3);
 
                 $finalizeRes = $this->finalizeUpload($videoID, $etag);
                 if($finalizeRes == 200){
-                    $postVideoRes = $this->postVideo($videoID);
+                    $postVideoRes = $this->postVideo($videoID, $title, $description);
 
                     if($postVideoRes == 200){
-                        return 'VIDEO POSTED SUCCESSFULLY!';
+                        return 'Video Posted Successfully!';
                     }else{
                         return $postVideoRes;
                     }
@@ -431,7 +431,8 @@ class linkedin extends Controller
     }
 
 
-    public function postVideo($videoID){
+    public function postVideo($videoID , $title, $description){
+        $combinedText = $title . ' ' . $description;
         $user_id = auth()->user()->id;
         $Token = User::where('id', $user_id)->value('linkedin_token');
         $pid = User::where('id', $user_id)->value('linkedin_id');
@@ -449,7 +450,7 @@ class linkedin extends Controller
             'specificContent' =>[
                 'com.linkedin.ugc.ShareContent' => [
                     'shareCommentary' => [
-                        'text' => 'Check out this video!'
+                        'text' => $combinedText,
                     ],
                     'shareMediaCategory' => 'VIDEO',
                     'media' => [
@@ -460,7 +461,7 @@ class linkedin extends Controller
                         ],
                         'media' => 'urn:li:digitalmediaAsset:' . $videoID,
                         'title' => [
-                            'text' => 'Testing'
+                            'text' => $title
                         ],
                         ]
                     ],
