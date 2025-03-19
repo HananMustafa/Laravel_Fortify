@@ -205,7 +205,7 @@ class linkedin extends Controller
         $initializeRes = $this->initializeVideo();
         $decodedData = $initializeRes->getData(true);
 
-        if($decodedData['status'] == 'success'){
+        if ($decodedData['status'] == 'success') {
 
             $uploadUrl = $decodedData['url'];
             $videoID = $decodedData['videoID'];
@@ -215,7 +215,7 @@ class linkedin extends Controller
             $decodedUpload = $uploadRes->getData(true);
             $etag = $decodedUpload['Etag'];
 
-            if($decodedUpload['status'] == 'success'){
+            if ($decodedUpload['status'] == 'success') {
 
                 //Checking the shit if available
                 // $statusRes = $this->getVideoStatus($videoID);
@@ -223,37 +223,37 @@ class linkedin extends Controller
                 sleep(3);
 
                 $finalizeRes = $this->finalizeUpload($videoID, $etag);
-                if($finalizeRes == 200){
+                if ($finalizeRes == 200) {
                     $postVideoRes = $this->postVideo($videoID, $title, $description);
 
-                    if($postVideoRes == 200){
+                    if ($postVideoRes == 200) {
                         return 'Video Posted Successfully!';
-                    }else{
+                    } else {
                         return $postVideoRes;
                     }
-                }else{
+                } else {
                     return $finalizeRes;
                 }
 
-                
 
-            }else{
+
+            } else {
                 return $decodedUpload['message'];
             }
 
-            
 
-        }else{
+
+        } else {
             return $decodedData['message'];
         }
 
 
 
-        
 
 
 
-        
+
+
 
     }
 
@@ -315,45 +315,47 @@ class linkedin extends Controller
     }
 
 
-    public function uploadVideo($endpoint, $video){
+    public function uploadVideo($endpoint, $video)
+    {
         $video = public_path(str_replace(url('/'), '', $video));
 
         //Fetching user_id from users table
         $user_id = auth()->user()->id;
         $Token = User::where('id', $user_id)->value('linkedin_token');
 
-        if(!file_exists($video)){
+        if (!file_exists($video)) {
             return $video;
         }
 
-        $videoStream = fopen($video,'r');
+        $videoStream = fopen($video, 'r');
 
         $response = Http::withHeaders([
             'Authorization' => 'Bearer ' . $Token,
             'Content-Type' => 'application/octet-stream'
         ])->withBody(stream_get_contents($videoStream), 'application/octet-stream')
-        ->post($endpoint);
+            ->post($endpoint);
 
         fclose($videoStream);
 
-        if($response->successful()){
+        if ($response->successful()) {
             // return 200;
             $etag = $response->header('Etag');
             return response()->json([
                 'status' => 'success',
-                'message'=> '200',
+                'message' => '200',
                 'Etag' => $etag
             ]);
-        }else{
+        } else {
             return response()->json([
                 'status' => 'failed',
-                'message'=> $response->body()
+                'message' => $response->body()
             ]);
         }
     }
 
 
-    public function getVideoStatus($videoID){
+    public function getVideoStatus($videoID)
+    {
         //Fetching user_id from users table
         $user_id = auth()->user()->id;
         $Token = User::where('id', $user_id)->value('linkedin_token');
@@ -361,59 +363,60 @@ class linkedin extends Controller
             return 401;
         }
 
-        $videoID = str_replace('urn:li:video:' ,'', $videoID);
+        $videoID = str_replace('urn:li:video:', '', $videoID);
         $url = "https://api.linkedin.com/rest/assets/{$videoID}";
 
         $flag = true;
-        while($flag){
+        while ($flag) {
 
-        $response = Http::withHeaders([
-            'Authorization' => 'Bearer ' . $Token,
-            'LinkedIn-Version' => '202502'
-        ])->get($url);
+            $response = Http::withHeaders([
+                'Authorization' => 'Bearer ' . $Token,
+                'LinkedIn-Version' => '202502'
+            ])->get($url);
 
-        $flag = false;
-        return $response->body();
-
-
-
-           
-
-
-
-
-
-
-
-        $data = $response->json();
-        if(isset($data['recipes'][0]['status']) && $data['recipes'][0]['status'] === 'WAITING_UPLOAD'){
             $flag = false;
-            return 'WAITING_UPLOAD';
-        }else{
-            return 'Loop laga le bhai';
+            return $response->body();
+
+
+
+
+
+
+
+
+
+
+
+            $data = $response->json();
+            if (isset($data['recipes'][0]['status']) && $data['recipes'][0]['status'] === 'WAITING_UPLOAD') {
+                $flag = false;
+                return 'WAITING_UPLOAD';
+            } else {
+                return 'Loop laga le bhai';
+            }
+
         }
-
-    }
     }
 
 
 
-    public function finalizeUpload($videoID, $etag){
+    public function finalizeUpload($videoID, $etag)
+    {
         $user_id = auth()->user()->id;
         $Token = User::where('id', $user_id)->value('linkedin_token');
 
-        if (!$Token) { 
+        if (!$Token) {
             return 'Invalid Token';
         }
 
-        $videoID = str_replace('urn:li:video:' ,'', $videoID);
+        $videoID = str_replace('urn:li:video:', '', $videoID);
         $url = 'https://api.linkedin.com/rest/videos?action=finalizeUpload';
 
         $body = [
             'finalizeUploadRequest' => [
-            'video' => 'urn:li:video:' . $videoID,
-            'uploadToken' => '',
-            'uploadedPartIds' => [$etag]
+                'video' => 'urn:li:video:' . $videoID,
+                'uploadToken' => '',
+                'uploadedPartIds' => [$etag]
             ]
         ];
 
@@ -423,15 +426,16 @@ class linkedin extends Controller
             'X-Restli-Protocol-Version' => '2.0.0'
         ])->post($url, $body);
 
-        if($response->successful()){
+        if ($response->successful()) {
             return 200;
-        }else{
+        } else {
             return $response->body();
         }
     }
 
 
-    public function postVideo($videoID , $title, $description){
+    public function postVideo($videoID, $title, $description)
+    {
         $combinedText = $title . ' ' . $description;
         $user_id = auth()->user()->id;
         $Token = User::where('id', $user_id)->value('linkedin_token');
@@ -440,14 +444,14 @@ class linkedin extends Controller
         if (!$Token) {
             return 'Token not found';
         }
-        $videoID = str_replace('urn:li:video:' ,'', $videoID);
+        $videoID = str_replace('urn:li:video:', '', $videoID);
 
         $url = 'https://api.linkedin.com/v2/ugcPosts';
 
         $body = [
             'author' => 'urn:li:person:' . $pid,
             'lifecycleState' => 'PUBLISHED',
-            'specificContent' =>[
+            'specificContent' => [
                 'com.linkedin.ugc.ShareContent' => [
                     'shareCommentary' => [
                         'text' => $combinedText,
@@ -455,14 +459,14 @@ class linkedin extends Controller
                     'shareMediaCategory' => 'VIDEO',
                     'media' => [
                         [
-                        'status' => 'READY',
-                        'description' => [
-                            'text' => 'Video description'
-                        ],
-                        'media' => 'urn:li:digitalmediaAsset:' . $videoID,
-                        'title' => [
-                            'text' => $title
-                        ],
+                            'status' => 'READY',
+                            'description' => [
+                                'text' => 'Video description'
+                            ],
+                            'media' => 'urn:li:digitalmediaAsset:' . $videoID,
+                            'title' => [
+                                'text' => $title
+                            ],
                         ]
                     ],
                 ],
@@ -473,15 +477,15 @@ class linkedin extends Controller
         ];
 
         $response = Http::withHeaders([
-            'Authorization' =>'Bearer ' . $Token,
+            'Authorization' => 'Bearer ' . $Token,
             'Content-Type' => 'application/json',
             'LinkedIn-Version' => '202502',
             'X-Restli-Protocol-Version' => '2.0.0'
         ])->post($url, $body);
 
-        if ($response->successful()){
+        if ($response->successful()) {
             return 200;
-        }else{
+        } else {
             return $response->body();
         }
 
