@@ -819,27 +819,7 @@ class linkedin extends Controller
 
 
         }
-
-
-
-        // if ($response->successful()) {
-        //     $data = $response->json();
-
-        //     //DEBUGGGGGGGGGGGGGGGGINGGGGGGGGGGGGGGGGGGGGGGG
-        //     // return $data['recipes'][0]['status'];
-        //     return $response->body();
-
-        //     // Check if 'recipes' key exists
-        //     // if (isset($data['recipes'][0]['status']) && $data['recipes'][0]['status'] === 'AVAILABLE') {
-        //     //     return 200;
-        //     // }
-        // }
-
-        // return $response->status();
     }
-
-
-
 
 
 }
