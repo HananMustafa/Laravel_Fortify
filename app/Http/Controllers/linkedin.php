@@ -197,19 +197,23 @@ class linkedin extends Controller
 
     }
 
-    public function linkPost($link, $title, $description, $pid)
+    public function linkPost($link, $title, $description)
     {
-        return 'Link function is ready';
+        //Fetching user_id from users table
+        $user_id = auth()->user()->id;
+        $Token = User::where('id', $user_id)->value('linkedin_token');
+        $linkedin_id = User::where('id', $user_id)->value('linkedin_id');
+
 
         $url = 'https://api.linkedin.com/v2/ugcPosts';
 
         $body = [
-            'author' => 'urn:li:organization:' . $pid,
+            'author' => 'urn:li:person:' . $linkedin_id,
             'lifecycleState' => 'PUBLISHED',
             'specificContent' => [
                 'com.linkedin.ugc.ShareContent' => [
                     'shareCommentary' => [
-                        'text' => $title
+                        'text' => $title . $description,
                     ],
                     'shareMediaCategory' => 'ARTICLE',
                     'media' => [
@@ -224,6 +228,18 @@ class linkedin extends Controller
                 'com.linkedin.ugc.MemberNetworkVisibility' => 'PUBLIC'
             ]
         ];
+
+        $response = Http::withHeaders([
+            'Authorization' => 'Bearer ' . $Token,
+            'Content-Type' => 'application/json'
+        ])->post($url, $body);
+
+
+        if($response->successful()){
+            return 'Link posted';
+        }else{
+            return $response->body();
+        }
     }
 
 
