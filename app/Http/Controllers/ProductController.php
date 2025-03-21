@@ -25,7 +25,8 @@ class ProductController extends Controller
             'title' => 'required',
             'description' => 'required',
             'image' => 'nullable|mimes:png,jpg,jpeg,webp',
-            'video' => 'nullable|mimes:mp4,avi,mov|max:102400' //max 100MB
+            'video' => 'nullable|mimes:mp4,avi,mov|max:102400', //max 100MB
+            'link' => 'nullable',
         ]);
 
         $imagePath = null;
@@ -54,7 +55,8 @@ class ProductController extends Controller
             'title' => $request->title,
             'description' => $request->description,
             'image' => $imagePath . $imageFilename,
-            'video' => $videoPath . $videoFilename
+            'video' => $videoPath . $videoFilename,
+            'link' => $request->link
         ]);
 
         return redirect()->route('product')->with('success', 'Product added successfully.');

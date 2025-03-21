@@ -209,6 +209,7 @@
                             <th>ID</th>
                             <th>Title</th>
                             <th>Description</th>
+                            <th>Link</th>
                             <th>Media</th>
                             <th>Action</th>
                         </tr>
@@ -264,51 +265,56 @@
                         name: 'description'
                     },
 
+                    {
+                        data: 'link',
+                        name: 'link'
+                    },
+
 
                     //IMAGE RENDERING
-                    // {
-                    //     data: 'image',
-                    //     name: 'image',
-                    //     render: function(data, type, row) {
-                    //         var imageHtml = '';
-                    //         if (data) { // Check if the image path is available
-                    //             var baseUrl =
-                    //                 '{{ asset('') }}'; // Outputs the base URL with trailing slash
-                    //             var imagePath = baseUrl + data; // Construct the full image path
-                    //             imageHtml =
-                    //                 `<img src="${imagePath}" alt="${row.title}" style="width:50px; height:auto;">`;
-                    //         }
-                    //         return imageHtml; // Return only if image exists, else return empty string
-                    //     },
-                    //     orderable: false, // Disable ordering on the image column if needed
-                    //     searchable: false // Similarly, disabling search if you don't want to search in image paths
-                    // },
+                    {
+                        data: 'image',
+                        name: 'image',
+                        render: function(data, type, row) {
+                            var imageHtml = '';
+                            if (data) { // Check if the image path is available
+                                var baseUrl =
+                                    '{{ asset('') }}'; // Outputs the base URL with trailing slash
+                                var imagePath = baseUrl + data; // Construct the full image path
+                                imageHtml =
+                                    `<img src="${imagePath}" alt="${row.title}" style="width:50px; height:auto;">`;
+                            }
+                            return imageHtml; // Return only if image exists, else return empty string
+                        },
+                        orderable: false, // Disable ordering on the image column if needed
+                        searchable: false // Similarly, disabling search if you don't want to search in image paths
+                    },
 
                     //VIDEO RENDERING
-                    {
-                        data: 'video',
-                        name: 'video',
-                        render: function(data, type, row) {
-                            var videoHtml = '';
+                    // {
+                    //     data: 'video',
+                    //     name: 'video',
+                    //     render: function(data, type, row) {
+                    //         var videoHtml = '';
 
-                            if (data) { // Check if the video path exists
-                                var baseUrl = '{{ asset('') }}'; // Base URL
-                                var videoPath = baseUrl + data; // Construct full video path
+                    //         if (data) { // Check if the video path exists
+                    //             var baseUrl = '{{ asset('') }}'; // Base URL
+                    //             var videoPath = baseUrl + data; // Construct full video path
 
-                                // Generate a video thumbnail using the poster attribute
-                                videoHtml = `
-                                    <video width="70" height="50" autoplay muted loop poster="${baseUrl}/thumbnails/${row.video_thumbnail}">
-                                        <source src="${videoPath}" type="video/mp4">
-                                        Your browser does not support the video tag.
-                                    </video>
-                                `;
-                            }
+                    //             // Generate a video thumbnail using the poster attribute
+                    //             videoHtml = `
+                    //                 <video width="70" height="50" autoplay muted loop poster="${baseUrl}/thumbnails/${row.video_thumbnail}">
+                    //                     <source src="${videoPath}" type="video/mp4">
+                    //                     Your browser does not support the video tag.
+                    //                 </video>
+                    //             `;
+                    //         }
 
-                            return videoHtml;
-                        },
-                        orderable: false,
-                        searchable: false
-                    },
+                    //         return videoHtml;
+                    //     },
+                    //     orderable: false,
+                    //     searchable: false
+                    // },
 
 
                     {
