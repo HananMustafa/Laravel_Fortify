@@ -403,6 +403,7 @@
                 var description = rowData.description;
                 var imagePath = rowData.image;
                 var videoPath = rowData.video;
+                var link = rowData.link;
 
                 var baseUrl = "{{ asset('')}}";
 
@@ -436,6 +437,10 @@
                     requestData.image = baseUrl + imagePath;
                 }else if (videoPath){
                     requestData.video = baseUrl + videoPath;
+                }
+
+                if(link){
+                    requestData.link = link;
                 }
 
                 $.ajax({

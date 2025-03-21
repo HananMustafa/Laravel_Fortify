@@ -139,7 +139,9 @@ class linkedin extends Controller
         $description = $request->input('description');
 
 
-        if ($request->has('image')) {
+        if ($request->has('link')) {
+            $Response = $this->linkPost($request->link, $title, $description);
+        } else if ($request->has('image')) {
             $Response = $this->imagePost($request->image, $title, $description);
         } else if ($request->has('video')) {
             $Response = $this->videoPost($request->video, $title, $description);
@@ -193,6 +195,35 @@ class linkedin extends Controller
 
 
 
+    }
+
+    public function linkPost($link, $title, $description, $pid)
+    {
+        return 'Link function is ready';
+
+        $url = 'https://api.linkedin.com/v2/ugcPosts';
+
+        $body = [
+            'author' => 'urn:li:organization:' . $pid,
+            'lifecycleState' => 'PUBLISHED',
+            'specificContent' => [
+                'com.linkedin.ugc.ShareContent' => [
+                    'shareCommentary' => [
+                        'text' => $title
+                    ],
+                    'shareMediaCategory' => 'ARTICLE',
+                    'media' => [
+                        [
+                            'status' => 'READY',
+                            'originalUrl' => $link
+                        ]
+                    ]
+                ]
+            ],
+            'visibility' => [
+                'com.linkedin.ugc.MemberNetworkVisibility' => 'PUBLIC'
+            ]
+        ];
     }
 
 
