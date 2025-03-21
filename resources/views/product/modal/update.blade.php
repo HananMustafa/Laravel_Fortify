@@ -18,11 +18,16 @@
                                 placeholder="Title">
                             <input type="text" id="description" name="description" required
                                 class="form-field animation a3" placeholder="Description">
+                            <input type="text" id="link" name="link" required
+                                class="form-field animation a3" placeholder="Link">
                         </div>
 
 
+                        {{-- <div class="mt-3">
+                            <input type="file" name="video" />
+                        </div> --}}
                         <div class="mt-3">
-                            <input type="file" name="video" /> {{--Video can be uploaded --}}
+                            <input type="file" name="image" />
                         </div>
 
                     </div>
