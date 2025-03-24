@@ -375,6 +375,8 @@
                             .title);
                         $('#updateModal').find('input[name="description"]').val(response.product
                             .description);
+                        $('#updateModal').find('input[name="link"]').val(response.product
+                            .link);
                         $('#updateModal').find('form').attr('action',
                             `/product/update/${productId}`);
 
