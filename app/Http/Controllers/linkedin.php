@@ -426,21 +426,13 @@ class linkedin extends Controller
 
 
 
-
-
-
-
-
-
-
-
-            $data = $response->json();
-            if (isset($data['recipes'][0]['status']) && $data['recipes'][0]['status'] === 'WAITING_UPLOAD') {
-                $flag = false;
-                return 'WAITING_UPLOAD';
-            } else {
-                return 'Loop laga le bhai';
-            }
+            // $data = $response->json();
+            // if (isset($data['recipes'][0]['status']) && $data['recipes'][0]['status'] === 'WAITING_UPLOAD') {
+            //     $flag = false;
+            //     return 'WAITING_UPLOAD';
+            // } else {
+            //     return 'Loop laga le bhai';
+            // }
 
         }
     }
